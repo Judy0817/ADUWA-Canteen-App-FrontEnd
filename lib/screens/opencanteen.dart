@@ -14,20 +14,17 @@ class OpenCanteen extends StatefulWidget {
 
 class _OpenCanteenState extends State<OpenCanteen> {
   Widget SearchBar() {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 10,
-        ),
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-            color: Color(0xffd9d9d9),
+            color: Color.fromRGBO(217, 217, 217, 0.5),
             borderRadius: BorderRadius.circular(50),
           ),
           height: 50,
-          width: 350.0,
+          width: 300.0,
           child: TextField(
             //controller: _emailTextController,
             keyboardType: TextInputType.emailAddress,
@@ -42,11 +39,30 @@ class _OpenCanteenState extends State<OpenCanteen> {
                   color: Color(0xfff9a825),
                 ),
                 hintText: 'Search Here',
-                hintStyle: TextStyle(
-                  color: Colors.black38,
-                )),
+                hintStyle: TextStyle(color: Colors.white, fontSize: 15)),
           ),
-        )
+        ),
+        SizedBox(
+          width: 30,
+        ),
+        GestureDetector(
+          onTap: () {},
+          child: Container(
+            width: 50.0,
+            height: 50.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Color.fromRGBO(217, 217, 217, 0.5),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.menu,
+                color: Color(0xffffffff),
+                size: 30,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -58,6 +74,44 @@ class _OpenCanteenState extends State<OpenCanteen> {
       isExpanded = !isExpanded; // Toggle the state
     });
   }
+
+  List names = [
+    "Parata",
+    "Uludu Wade",
+    "Thosai",
+    "Rice",
+    "Koththu",
+    "Noodless",
+    "Rolls",
+    "Sandwidch",
+    "Hoppers",
+    "Omlet Bun"
+  ];
+  List price = [
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100",
+    "Rs. 100 "
+  ];
+
+  List images = [
+    "images/noodless.png",
+    "images/fries.png",
+    "images/noodless.png",
+    "images/pizza.png",
+    "images/noodless.png",
+    "images/noodless.png",
+    "images/noodless.png",
+    "images/noodless.png",
+    "images/noodless.png",
+    "images/noodless.png",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -71,649 +125,162 @@ class _OpenCanteenState extends State<OpenCanteen> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0x8ed9d9d9),
+                  image: DecorationImage(
+                    image: AssetImage("images/background.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.7),
+                      BlendMode.darken,
+                    ),
+                  ),
                 ),
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 25.0,
+                    horizontal: 15.0,
                     vertical: 35.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        margin: EdgeInsets.all(5),
-                        padding: EdgeInsets.fromLTRB(25, 10, 0, 0),
-                        width: 350.0,
-                        height: 150.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(35),
-                          color: Color(0x66f9a825),
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 20,
+                      SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 240,
+                            child: Text(
+                              "Find Your \nFavorite Food",
+                              style: TextStyle(
+                                fontSize: 30,
+                                height: 1,
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xffffffff),
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Today What Do You \nWant To Eat?',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    height: 1,
-                                    letterSpacing: 2,
-                                    color: Color(0xff000000),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                  width: 150.0,
-                                  height: 50.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Color(0xfff9a825),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Order Now!',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Image.asset(
-                                  "images/noodless.png",
-                                  width: 150,
-                                  height: 70,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 20),
                       SearchBar(),
                       SizedBox(height: 20),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                              margin: EdgeInsets.all(8),
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              width: 340.0,
-                              height: 150.0,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/salad.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Salad\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      handleToggle();
-                                    },
-                                    child: AnimatedContainer(
-                                      duration: Duration(milliseconds: 500),
-                                      curve: Curves.easeInOut,
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: isExpanded ? 160.0 : 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/pizza.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Pizza\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/fries.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Fries\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/salad.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Salad\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/noodless.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Noodless\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 20),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/taco.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Taco\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
+                          SizedBox(
+                            width: 250,
+                            child: Text(
+                              "Popular Foods - Open Canteen",
+                              style: TextStyle(
+                                fontSize: 16,
+                                height: 1,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xffffffff),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Container(
-                              margin: EdgeInsets.all(8),
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              width: 340.0,
-                              height: 150.0,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/taco.png",
-                                            width: 100,
-                                            height: 100,
+                      Container(
+                        height: 400,
+                        child: ListView.builder(
+                          itemCount: 10,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) =>
+                              Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: Card(
+                              elevation: 5,
+                              color: Color.fromRGBO(217, 217, 217, 0.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 60,
+                                          height: 60,
+                                          color: Colors.transparent,
+                                          child: CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                              images[index],
+                                            ),
+                                            backgroundColor: Colors
+                                                .transparent, // Replace with your asset path
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Taco\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
+                                        ),
+                                        SizedBox(
+                                          width: 5.0,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              names[index],
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              price[index],
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            )
+                                          ],
+                                        )
+                                      ],
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: 50, // Set the width as needed
+                                      height: 50, // Set the height as needed
+                                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Color(0xfff9a825).withOpacity(0.7),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/fries.png",
-                                            width: 100,
-                                            height: 100,
+                                      child: TextButton(
+                                        onPressed: () {},
+                                        style: TextButton.styleFrom(
+                                          primary: Colors.white,
+                                        ),
+                                        child: Text(
+                                          '+',
+                                          style: TextStyle(
+                                            fontSize: 12,
                                           ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Fries\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      handleToggle();
-                                    },
-                                    child: AnimatedContainer(
-                                      duration: Duration(milliseconds: 500),
-                                      curve: Curves.easeInOut,
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: isExpanded ? 160.0 : 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/pizza.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Pizza\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/fries.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Fries\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/noodless.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Noodless\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 20),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      margin: EdgeInsets.all(8),
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      width: 130.0,
-                                      height: 120.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: Color(0xffffffff),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          Image.asset(
-                                            "images/taco.png",
-                                            width: 100,
-                                            height: 100,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Taco\nRs. 100',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14.0,
-                                                ),
-                                              ),
-                                              SizedBox(width: 30),
-                                              // Add spacing between text and icon
-                                              Icon(
-                                                Icons.add,
-                                                size: 30,
-                                                color: Color(0xfff9a825),
-                                              ),
-                                            ],
-                                          ),
-                                          // Adjust the spacing between the image and te
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        ],
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
+                      SizedBox(height: 20),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
                             onTap: (){
@@ -726,8 +293,8 @@ class _OpenCanteenState extends State<OpenCanteen> {
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(14, 0, 20, 0),
-                              width: 150.0,
-                              height: 50.0,
+                              width: 100.0,
+                              height: 40.0,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                                 color: Color(0xfff9a825),

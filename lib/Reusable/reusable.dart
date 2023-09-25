@@ -2,28 +2,26 @@ import 'package:flutter/material.dart';
 
 Align SignInSignUpBtn(String text, Function() onTap) {
   return Align(
-      alignment: Alignment.center,
+      alignment: Alignment.bottomRight,
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: 350.0,
+          width: 90.0,
           height: 50.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: Color(0xfff9a825),
           ),
           child: Center(
-            child: Text(
-              text,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+            child: Icon(
+              Icons.arrow_forward,
+              color: Color(0xffffffff),
+              size: 30,
               ),
             ),
           ),
         ),
-      ));
+      );
 }
 
 Align CanteenSet(String text, String imageName, Function() onTap) {
@@ -37,7 +35,7 @@ Align CanteenSet(String text, String imageName, Function() onTap) {
             height: 150.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(35),
-              color: Color(0xffffffff),
+                color: Color.fromRGBO(217, 217, 217, 0.5),
             ),
             child: Column(
               children: [
@@ -49,7 +47,7 @@ Align CanteenSet(String text, String imageName, Function() onTap) {
                 Text(
                   text,
                   style: const TextStyle(
-                    color: Colors.black,
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 14.0,
                   ),

@@ -3,19 +3,18 @@ import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/signup.dart';
 import '../../Reusable/reusable.dart';
 
-import 'forgotpassword.dart';
 import 'home.dart';
 final double ffem = 45;
 const double fem = 10.0;
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordState extends State<ForgotPassword> {
 
 
   final TextEditingController _passwordTextController = TextEditingController();
@@ -33,9 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-              color: Color.fromRGBO(217, 217, 217, 0.5),
-              borderRadius: BorderRadius.circular(50),
-              ),
+            color: Color.fromRGBO(217, 217, 217, 0.5),
+            borderRadius: BorderRadius.circular(50),
+          ),
           height: 60,
           width: 320.0,
           child: Padding(
@@ -64,75 +63,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget buildPassword() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 20,
-        ),
-        Container(
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-              color: Color.fromRGBO(217, 217, 217, 0.5),
-              borderRadius: BorderRadius.circular(50),
-              ),
-          height: 60,
-          width: 320.0,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
-            child: TextField(
-              controller: _passwordTextController,
-              obscureText: true,
-              style: TextStyle(
-                color: Colors.black87,
-              ),
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(top: 14),
-                  suffixIcon: Icon(
-                    Icons.key_outlined,
-                    color: Color(0xfff9a825),
-                  ),
-                  hintText: 'Password',
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                  )),
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget buildForogotPassBtn() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 26.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ForgotPassword()));
-            },
-            child: const Text(
-              " Forgot Password?",
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                decorationColor: Color(0xfff9a825), // Customize underline color
-                decorationThickness: 2.0,
-                color: Color(0xfff9a825),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
 
 
   @override
@@ -170,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text("Welcome \nBack !",
+                          Text("Forgot \npassword",
                             style: TextStyle (
                               fontSize:  40,
                               fontWeight:  FontWeight.w700,
@@ -182,42 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: 45),
                       buildEmail(),
-                      SizedBox(height: 20),
-                      buildPassword(),
-                      SizedBox(height: 15),
-                      buildForogotPassBtn(),
+
                       SizedBox(height: 40),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 26.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => const SignUp()));
-                                  },
-                                  child: const Text(
-                                    " Sign Up",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: Color(0xffffffff), // Customize underline color
-                                        decorationThickness: 2.0,
-                                        color: Color(0xffffffff),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 120,),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(

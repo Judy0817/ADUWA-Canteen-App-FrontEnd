@@ -18,20 +18,17 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   Widget SearchBar() {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 10,
-        ),
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-            color: Color(0xffd9d9d9),
+            color: Color.fromRGBO(217, 217, 217, 0.5),
             borderRadius: BorderRadius.circular(50),
           ),
           height: 50,
-          width: 350.0,
+          width: 300.0,
           child: TextField(
             //controller: _emailTextController,
             keyboardType: TextInputType.emailAddress,
@@ -45,12 +42,34 @@ class _HomeState extends State<Home> {
                   Icons.search,
                   color: Color(0xfff9a825),
                 ),
-                hintText: 'Which canteen do you want?',
+                hintText: 'Search Here',
                 hintStyle: TextStyle(
-                  color: Colors.black38,
+                    color: Colors.white,
+                    fontSize: 15
                 )),
           ),
-        )
+        ),
+        SizedBox(width: 30,),
+        GestureDetector(
+          onTap: () {
+
+          },
+          child: Container(
+            width: 50.0,
+            height: 50.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: Color.fromRGBO(217, 217, 217, 0.5),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.menu,
+                color: Color(0xffffffff),
+                size: 30,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -67,56 +86,37 @@ class _HomeState extends State<Home> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0x8ed9d9d9),
+                  image: DecorationImage(
+                    image: AssetImage("images/background.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.7),
+                      BlendMode.darken,
+                    ),
+                  ),
                 ),
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 25.0,
+                    horizontal: 15.0,
                     vertical: 30.0,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                          Row(
-                            crossAxisAlignment:  CrossAxisAlignment.center,
-                            children:  [
-                              Container(
-                                // hellojudyxYX (66:222)
-                                margin:  EdgeInsets.fromLTRB(0*fem, 0*fem, 23*fem, 0*fem),
-                                child:
-                                Text(
-                                  'Hello, Judy',
-                                  style:  TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                // ellipse234B (66:223)
-                                width:  50,
-                                height:  50,
-                                decoration:  BoxDecoration (
-                                  borderRadius:  BorderRadius.circular(23.5*fem),
-                                  color: Color(0x93d9d9d9),
-                                ),
-                              ),
-                            ],
-                          ),
                           SizedBox(height: 20,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 180,
-                                child: Text("Find Your Favorite Food",
+                                width: 240,
+                                child: Text("Find Your \nFavorite Food",
                                   style: TextStyle (
-                                    fontSize:  20,
+                                    fontSize:  30,
                                     height: 1 ,
                                     letterSpacing:  2,
                                     fontWeight: FontWeight.bold,
-                                    color:  Color(0xff000000),
+                                    color:  Color(0xffffffff),
                                   ),),
                               ),
                             ],
@@ -131,11 +131,11 @@ class _HomeState extends State<Home> {
                             width: 180,
                             child: Text("Popular Canteen",
                               style: TextStyle (
-                                fontSize:  15,
+                                fontSize:  16,
                                 height: 1 ,
-                                letterSpacing:  2,
+                                letterSpacing:  1,
                                 fontWeight: FontWeight.bold,
-                                color:  Color(0xff000000),
+                                color:  Color(0xffffffff),
                               ),),
                           ),
                         ],

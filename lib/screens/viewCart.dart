@@ -21,7 +21,14 @@ class _viewCartState extends State<viewCart> {
                 height: double.infinity,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Color(0x8ed9d9d9),
+                  image: DecorationImage(
+                    image: AssetImage("images/background.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.7),
+                      BlendMode.darken,
+                    ),
+                  ),
                 ),
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
@@ -31,58 +38,20 @@ class _viewCartState extends State<viewCart> {
                   ),
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 30),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          ListTile(
-                            leading: Icon(Icons.favorite),
-                            title: Text('ListTile 3'),
-                            subtitle: Text('Subtitle for ListTile 3'),
-                            onTap: () {
-                              print('ListTile 3 tapped!');
-                            },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.favorite),
-                            title: Text('ListTile 3'),
-                            subtitle: Text('Subtitle for ListTile 3'),
-                            onTap: () {
-                              print('ListTile 3 tapped!');
-                            },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.favorite),
-                            title: Text('ListTile 3'),
-                            subtitle: Text('Subtitle for ListTile 3'),
-                            onTap: () {
-                              print('ListTile 3 tapped!');
-                            },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.favorite),
-                            title: Text('ListTile 3'),
-                            subtitle: Text('Subtitle for ListTile 3'),
-                            onTap: () {
-                              print('ListTile 3 tapped!');
-                            },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.favorite),
-                            title: Text('ListTile 3'),
-                            subtitle: Text('Subtitle for ListTile 3'),
-                            onTap: () {
-                              print('ListTile 3 tapped!');
-                            },
-                          ),
-
-                          SizedBox(height: 50,),
-
-
+                          Text("Order Details",
+                            style: TextStyle (
+                              fontSize:  40,
+                              fontWeight:  FontWeight.w700,
+                              height: 1 ,
+                              letterSpacing:  2,
+                              color:  Color(0xffffffff),
+                            ),),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
