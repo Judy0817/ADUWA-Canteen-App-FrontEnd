@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:university_canteen/screens/signup.dart';
-import '../../Reusable/reusable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import '../Reusable/reusable.dart';
 import 'home.dart';
+import 'login.dart';
 final double ffem = 45;
 const double fem = 10.0;
 
@@ -16,8 +17,6 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
 
-
-  final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
 
   bool isRememberMe = false;
@@ -118,13 +117,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                ),
-                              );
+                            onTap: () async {
+                              if (_emailTextController.text == "") {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(errorMessage("Enter Your Email"));
+                              } else {
+                                await FirebaseAuth.instance.sendPasswordResetEmail(
+                                    email: _emailTextController.text);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              }
                             },
                             child: Container(
                               width: 90.0,

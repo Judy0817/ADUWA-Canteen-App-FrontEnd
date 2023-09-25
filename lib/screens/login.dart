@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/signup.dart';
 import '../../Reusable/reusable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'forgotpassword.dart';
 import 'home.dart';
@@ -219,13 +220,36 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           SizedBox(width: 120,),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                ),
-                              );
+                            onTap: () async {
+                              if (_passwordTextController.text == "") {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    errorMessage("Enter Your Password"));
+                              } else if (_emailTextController.text == "") {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(errorMessage("Enter Your Email"));
+                              }
+                              try {
+                                final credential = await FirebaseAuth.instance
+                                    .signInWithEmailAndPassword(
+                                  email: _emailTextController.text,
+                                  password: _passwordTextController.text,
+                                );
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Home(),
+                                  ),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                if (e.code == 'user-not-found') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      errorMessage("No user found for that email."));
+                                } else if (e.code == 'wrong-password') {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      errorMessage("Wrong password provided for that user."));
+                                }
+                              }
                             },
                             child: Container(
                               width: 90.0,

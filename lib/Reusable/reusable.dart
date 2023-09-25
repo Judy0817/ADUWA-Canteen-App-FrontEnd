@@ -128,3 +128,34 @@ Widget SearchBar() {
     ],
   );
 }
+
+
+SnackBar errorMessage(String msg) {
+  return SnackBar(
+    content: Container(
+        padding: const EdgeInsets.all(16),
+        height: 80,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            const Text(
+              "ERROR",
+              style: TextStyle(fontSize: 16, color: Colors.black87),
+            ),
+            const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+            Text(
+              msg,
+              style: const TextStyle(color: Colors.black54, fontSize: 14),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        )),
+    behavior: SnackBarBehavior.fixed,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+  );
+}

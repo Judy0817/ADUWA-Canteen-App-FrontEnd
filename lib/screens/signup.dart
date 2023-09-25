@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../Reusable/reusable.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import '../Reusable/reusable.dart';
 import 'home.dart';
+
 final double ffem = 45;
 const double fem = 10.0;
 
@@ -14,12 +15,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-
-
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _userNameTextController = TextEditingController();
 
   bool isRememberMe = false;
+
   Widget buildEmail() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +61,7 @@ class _SignUpState extends State<SignUp> {
       ],
     );
   }
+
   Widget buildUserName() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +80,7 @@ class _SignUpState extends State<SignUp> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             child: TextField(
-              controller: _emailTextController,
+              controller: _userNameTextController,
               keyboardType: TextInputType.emailAddress,
               style: TextStyle(
                 color: Colors.black87,
@@ -142,36 +144,6 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Widget buildForogotPassBtn() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 26.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const Home()));
-            },
-            child: const Text(
-              " Forgot Password?",
-              style: TextStyle(
-                decoration: TextDecoration.underline,
-                decorationColor: Color(0xfff9a825), // Customize underline color
-                decorationThickness: 2.0,
-                color: Color(0xfff9a825),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,14 +178,16 @@ class _SignUpState extends State<SignUp> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text("Sign Up",
-                            style: TextStyle (
-                              fontSize:  40,
-                              fontWeight:  FontWeight.w700,
-                              height: 1 ,
-                              letterSpacing:  2,
-                              color:  Color(0xffffffff),
-                            ),),
+                          Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w700,
+                              height: 1,
+                              letterSpacing: 2,
+                              color: Color(0xffffffff),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(height: 45),
@@ -227,13 +201,54 @@ class _SignUpState extends State<SignUp> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Home(),
-                                ),
-                              );
+                            onTap: () async {
+                              String email = _emailTextController.text;
+                              String userName = _userNameTextController.text;
+
+                              if (_userNameTextController.text == "") {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    errorMessage("Enter Your User Name"));
+                              } else if (_emailTextController.text == "") {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    errorMessage("Enter Your Email"));
+                              } else if (_passwordTextController.text == "") {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    errorMessage("Enter Your Password"));
+                              } else {
+                                try {
+                                  UserCredential userCredential =
+                                      await FirebaseAuth
+                                          .instance
+                                          .createUserWithEmailAndPassword(
+                                              email: _emailTextController.text,
+                                              password:
+                                                  _passwordTextController.text);
+                                  User? user =
+                                      FirebaseAuth.instance.currentUser;
+
+                                  if (user != null && !user.emailVerified) {
+                                    await user.sendEmailVerification();
+                                  }
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const Home(),
+                                      ));
+                                } on FirebaseAuthException catch (e) {
+                                  if (e.code == 'weak-password') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        errorMessage(
+                                            "Password must be at least 6 characters"));
+                                  } else if (e.code == 'email-already-in-use') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        errorMessage(
+                                            "Account already exists for that email"));
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      errorMessage("User Registration Failed"));
+                                }
+                              }
                             },
                             child: Container(
                               width: 90.0,
@@ -251,15 +266,8 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ),
                           ),
-
-
-
                         ],
                       ),
-
-
-
-
 
                       //buildRememberMe(),
                     ],
