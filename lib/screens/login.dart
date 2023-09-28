@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:university_canteen/screens/adminPage.dart';
 import 'package:university_canteen/screens/signup.dart';
 import '../../Reusable/reusable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'forgotpassword.dart';
 import 'home.dart';
+import 'location.dart';
 final double ffem = 45;
 const double fem = 10.0;
 
@@ -221,6 +223,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(width: 120,),
                           GestureDetector(
                             onTap: () async {
+                              String email = _emailTextController.text;
+                              String domain= email.substring(email.indexOf('@')+1);
                               if (_passwordTextController.text == "") {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     errorMessage("Enter Your Password"));
@@ -229,18 +233,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                     .showSnackBar(errorMessage("Enter Your Email"));
                               }
                               try {
-                                final credential = await FirebaseAuth.instance
-                                    .signInWithEmailAndPassword(
-                                  email: _emailTextController.text,
-                                  password: _passwordTextController.text,
-                                );
+                                if(domain=='foe.sjp.ac.lk'){
+                                  final credential = await FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
+                                    email: _emailTextController.text,
+                                    password: _passwordTextController.text,
+                                  );
 
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Home(),
-                                  ),
-                                );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const location(),
+                                    ),
+                                  );
+                                }else if(domain=='admin.ac.lk'){
+                                  final credential = await FirebaseAuth.instance
+                                      .signInWithEmailAndPassword(
+                                    email: _emailTextController.text,
+                                    password: _passwordTextController.text,
+                                  );
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const AdminPage(),
+                                    ),
+                                  );
+                                }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      errorMessage("No user found for that email."));
+                                }
+
                               } on FirebaseAuthException catch (e) {
                                 if (e.code == 'user-not-found') {
                                   ScaffoldMessenger.of(context).showSnackBar(

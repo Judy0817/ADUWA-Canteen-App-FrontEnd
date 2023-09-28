@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^4.10.0
   firebase_core: ^2.16.0
+  location: ^5.0.3
 
 dev_dependencies:
   flutter_test:
@@ -49,6 +50,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  google_maps_flutter: ^2.1.1
+  geolocator: ^9.0.2
+  search_map_location: 0.0.6
+  search_map_place_updated: ^0.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

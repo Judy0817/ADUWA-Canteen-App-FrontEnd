@@ -5,14 +5,14 @@ import 'package:university_canteen/screens/viewCart.dart';
 import '../Reusable/reusable.dart';
 import 'home.dart';
 
-class OpenCanteen extends StatefulWidget {
-  const OpenCanteen({Key? key}) : super(key: key);
+class AdminPage extends StatefulWidget {
+  const AdminPage({Key? key}) : super(key: key);
 
   @override
-  State<OpenCanteen> createState() => _OpenCanteenState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _OpenCanteenState extends State<OpenCanteen> {
+class _AdminPageState extends State<AdminPage> {
   Widget SearchBar() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,7 +143,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 80),
+                      SizedBox(height: 10),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -190,92 +190,70 @@ class _OpenCanteenState extends State<OpenCanteen> {
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) =>
                               Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: Card(
-                              elevation: 5,
-                              color: Color.fromRGBO(217, 217, 217, 0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
-                                child: Row(
-                                  mainAxisAlignment:
+                                    horizontal: 10, vertical: 5),
+                                child: Card(
+                                  elevation: 5,
+                                  color: Color.fromRGBO(217, 217, 217, 0.5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: 60,
-                                          height: 60,
-                                          color: Colors.transparent,
-                                          child: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              images[index],
-                                            ),
-                                            backgroundColor: Colors
-                                                .transparent, // Replace with your asset path
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 5.0,
-                                        ),
-                                        Column(
+                                        Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              names[index],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              color: Colors.transparent,
+                                              child: CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                  images[index],
+                                                ),
+                                                backgroundColor: Colors
+                                                    .transparent, // Replace with your asset path
+                                              ),
                                             ),
-                                            Text(
-                                              price[index],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                            SizedBox(
+                                              width: 5.0,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  names[index],
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold),
+                                                ),
+                                                Text(
+                                                  price[index],
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold),
+                                                )
+                                              ],
                                             )
                                           ],
-                                        )
+                                        ),
+
                                       ],
                                     ),
-                                    Container(
-                                      alignment: Alignment.center,
-                                      width: 50, // Set the width as needed
-                                      height: 50, // Set the height as needed
-                                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: Color(0xfff9a825).withOpacity(0.7),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                        ),
-                                        child: Text(
-                                          '+',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
                         ),
                       ),
                       SizedBox(height: 20),
@@ -301,7 +279,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'View Cart',
+                                  'Add Item',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:university_canteen/screens/location.dart';
+import 'package:university_canteen/screens/start.dart';
 import '../Reusable/reusable.dart';
+import 'adminPage.dart';
 import 'home.dart';
 
 final double ffem = 45;
@@ -204,6 +207,7 @@ class _SignUpState extends State<SignUp> {
                             onTap: () async {
                               String email = _emailTextController.text;
                               String userName = _userNameTextController.text;
+                              String domain= email.substring(email.indexOf('@')+1);
 
                               if (_userNameTextController.text == "") {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -216,24 +220,46 @@ class _SignUpState extends State<SignUp> {
                                     errorMessage("Enter Your Password"));
                               } else {
                                 try {
-                                  UserCredential userCredential =
-                                      await FirebaseAuth
-                                          .instance
-                                          .createUserWithEmailAndPassword(
-                                              email: _emailTextController.text,
-                                              password:
-                                                  _passwordTextController.text);
-                                  User? user =
-                                      FirebaseAuth.instance.currentUser;
+                                  if(domain=='foe.sjp.ac.lk'){
+                                    UserCredential userCredential = await FirebaseAuth
+                                        .instance
+                                        .createUserWithEmailAndPassword(
+                                        email: _emailTextController.text,
+                                        password: _passwordTextController.text);
+                                    User? user = FirebaseAuth.instance.currentUser;
 
-                                  if (user != null && !user.emailVerified) {
-                                    await user.sendEmailVerification();
+
+                                    if (user != null && !user.emailVerified) {
+                                      await user.sendEmailVerification();
+                                    }
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const location(
+                                          ),
+                                        ));
+                                  }else if(domain=='admin.ac.lk'){
+                                    UserCredential userCredential = await FirebaseAuth
+                                        .instance
+                                        .createUserWithEmailAndPassword(
+                                        email: _emailTextController.text,
+                                        password: _passwordTextController.text);
+                                    User? user = FirebaseAuth.instance.currentUser;
+
+
+                                    if (user != null && !user.emailVerified) {
+                                      await user.sendEmailVerification();
+                                    }
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const AdminPage(
+                                          ),
+                                        ));
+                                  }else{
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        errorMessage("User Registration Failed"));
                                   }
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const Home(),
-                                      ));
                                 } on FirebaseAuthException catch (e) {
                                   if (e.code == 'weak-password') {
                                     ScaffoldMessenger.of(context).showSnackBar(
