@@ -5,42 +5,43 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Map extends StatefulWidget {
-  const Map({Key? key}) : super(key: key);
+class MapCurrent extends StatefulWidget {
+  const MapCurrent({Key? key}) : super(key: key);
 
   @override
-  State<Map> createState() => _MapState();
+  State<MapCurrent> createState() => _MapCurrentState();
 }
 
-class _MapState extends State<Map> {
+
+class _MapCurrentState extends State<MapCurrent> {
   GoogleMapController? mapController; //contrller for Google map
-  Completer<GoogleMapController> _mapController =
-      Completer<GoogleMapController>();
+  Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
 
   Set<Marker> markers = Set(); //markers for google map
   LatLng showLocation = LatLng(6.85194825886, 79.9016563934);
 
   //location to show in map
-  Widget searchLocation() {
+  Widget searchLocation(){
     return Scaffold(
         body: Center(
-      child: SearchMapPlaceWidget(
-        apiKey: 'AIzaSyBvWI36tQ8jaJI-kqRFQ63j0e4aGlv_kLs',
-        // The language of the autocompletion
-        language: 'en',
-        // The position used to give better recomendations. In this case we are using the user position
-        //location: userPosition.coordinates,
-        radius: 30000,
-        onSelected: (Place place) async {
-          final geolocation = await place.geolocation;
+          child: SearchMapPlaceWidget(
+            apiKey: 'AIzaSyBvWI36tQ8jaJI-kqRFQ63j0e4aGlv_kLs',
+            // The language of the autocompletion
+            language: 'en',
+            // The position used to give better recomendations. In this case we are using the user position
+            //location: userPosition.coordinates,
+            radius: 30000,
+            onSelected: (Place place) async {
+              final geolocation = await place.geolocation;
 
-          // Will animate the GoogleMap camera, taking us to the selected position with an appropriate zoom
-          final GoogleMapController controller = await _mapController.future;
-          //controller.animateCamera(CameraUpdate.newLatLng(geolocation.coordinates));
-          //controller.animateCamera(CameraUpdate.newLatLngBounds(geolocation.bounds, 0));
-        },
-      ),
-    ));
+              // Will animate the GoogleMap camera, taking us to the selected position with an appropriate zoom
+              final GoogleMapController controller = await _mapController.future;
+              //controller.animateCamera(CameraUpdate.newLatLng(geolocation.coordinates));
+              //controller.animateCamera(CameraUpdate.newLatLngBounds(geolocation.bounds, 0));
+            },
+          ),
+        )
+    );
   }
 
   @override
@@ -69,7 +70,9 @@ class _MapState extends State<Map> {
         actions: [
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+
+            },
           )
         ],
         backgroundColor: Color(0xFF43073c),
@@ -94,22 +97,26 @@ class _MapState extends State<Map> {
           });
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your action here
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          Position position = await _determinePosition();
+
+          mapController?.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: LatLng(position.latitude, position.longitude),
+                  zoom: 5)));
+
+          markers.clear();
+
+          markers.add(Marker(
+              markerId: const MarkerId('currentLocation'),
+              position: LatLng(position.latitude, position.longitude)));
+
+          setState(() {});
         },
-        child: Text(
-          'Set Location',
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-          ),
-        ),
-        backgroundColor: Color.fromRGBO(217, 217, 217, 0.5),
-        mini: true,
+        label: const Text("Current Location"),
+        icon: const Icon(Icons.location_history,),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

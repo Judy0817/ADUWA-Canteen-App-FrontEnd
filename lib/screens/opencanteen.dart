@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:university_canteen/screens/food_descrip.dart';
 import 'package:university_canteen/screens/viewCart.dart';
 
 import '../Reusable/reusable.dart';
-import 'home.dart';
+import 'foodDataModel.dart';
 
 class OpenCanteen extends StatefulWidget {
   const OpenCanteen({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.06,
+          width: MediaQuery.of(context).size.width * 0.04,
         ),
         GestureDetector(
           onTap: () {},
@@ -75,7 +76,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
     });
   }
 
-  List names = [
+  static List names = [
     "Parata",
     "Uludu Wade",
     "Thosai",
@@ -87,7 +88,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
     "Hoppers",
     "Omlet Bun"
   ];
-  List price = [
+  static List price = [
     "Rs. 100",
     "Rs. 100",
     "Rs. 100",
@@ -99,8 +100,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
     "Rs. 100",
     "Rs. 100 "
   ];
-
-  List images = [
+  static List images = [
     "images/noodless.png",
     "images/fries.png",
     "images/noodless.png",
@@ -112,6 +112,11 @@ class _OpenCanteenState extends State<OpenCanteen> {
     "images/noodless.png",
     "images/noodless.png",
   ];
+
+  final List<FruitDataModel> Fruitdata = List.generate(
+      names.length,
+          (index)
+      => FruitDataModel('${names[index]}', '${images[index]}','${names[index]} Description...'));
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +191,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                               Container(
                             width: MediaQuery.of(context).size.width,
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
+                              vertical: MediaQuery.of(context).size.height * 0.005,),
                             child: Card(
                               elevation: 5,
                               color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -194,9 +199,11 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Container(
-                                width: MediaQuery.of(context).size.width,
+                                width: MediaQuery.of(context).size.width ,
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
+                                  horizontal: MediaQuery.of(context).size.height * 0.0175,
+                                  vertical: MediaQuery.of(context).size.height * 0.0175,
+                                ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -207,15 +214,23 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Container(
-                                          width: 60,
+                                          width: MediaQuery.of(context).size.width * 0.2,
                                           height: MediaQuery.of(context).size.height * 0.08,
                                           color: Colors.transparent,
-                                          child: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              images[index],
+                                          child: GestureDetector(
+                                            onTap: (){
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => const FoodDescrip()));
+                                            },
+                                            child: CircleAvatar(
+                                              backgroundImage: AssetImage(
+                                                images[index],
+                                              ),
+                                              backgroundColor: Colors
+                                                  .transparent, // Replace with your asset path
                                             ),
-                                            backgroundColor: Colors
-                                                .transparent, // Replace with your asset path
                                           ),
                                         ),
                                         SizedBox(
@@ -243,23 +258,25 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                       ],
                                     ),
                                     Container(
-                                      alignment: Alignment.center,
-                                      width: MediaQuery.of(context).size.width * 0.1,// Set the width as needed
-                                      height: MediaQuery.of(context).size.height * 0.06,// Set the height as needed
-                                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                                      alignment: Alignment.bottomRight,
+                                      width: 40,// Set the width as needed
+                                      height: 40,// Set the height as needed
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(50),
                                         color: Color(0xfff9a825).withOpacity(0.7),
                                       ),
                                       child: TextButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          const snackBar = SnackBar(content: Text('Added to cart'));
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                        },
                                         style: TextButton.styleFrom(
                                           primary: Colors.white,
                                         ),
                                         child: Text(
                                           '+',
                                           style: TextStyle(
-                                            fontSize: 12,
+                                            fontSize: 15,
                                           ),
                                         ),
                                       ),

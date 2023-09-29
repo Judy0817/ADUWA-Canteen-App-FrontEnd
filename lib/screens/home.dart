@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.06,
+          width: MediaQuery.of(context).size.width * 0.04,
         ),
         GestureDetector(
           onTap: () {},
@@ -153,6 +153,7 @@ class _HomeState extends State<Home> {
                               ),
                             );
                           }),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                           CanteenSet("Gym Canteen", "salad.png", () async {
                             Navigator.push(
                               context,
@@ -174,6 +175,7 @@ class _HomeState extends State<Home> {
                               ),
                             );
                           },),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
                           CanteenSet("Green Canteen", "taco.png", () async {
                             Navigator.push(
                               context,

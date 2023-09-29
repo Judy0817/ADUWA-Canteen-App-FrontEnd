@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/home.dart';
+import 'package:university_canteen/screens/mapCurrentLocation.dart';
 import 'map.dart';
 
 class location extends StatefulWidget {
@@ -179,7 +180,7 @@ class _locationState extends State<location> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => const Map()));
+                                          builder: (context) => const MapCurrent()));
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(15),
@@ -247,6 +248,7 @@ class _locationState extends State<location> {
           ),
         ),
       ),
+
     );
   }
 }

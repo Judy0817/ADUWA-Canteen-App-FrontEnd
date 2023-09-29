@@ -32,9 +32,9 @@ Align CanteenSet(String text, String imageName, Function() onTap) {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-            margin: EdgeInsets.all(15),
-            width: 135,
-            height: 135,
+          margin: EdgeInsets.fromLTRB(0, 0, 20, 20),
+            width: 140,
+            height: 140,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(35),
                 color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -157,6 +157,34 @@ SnackBar errorMessage(String msg) {
           ],
         )),
     behavior: SnackBarBehavior.fixed,
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+  );
+}
+
+
+SnackBar InfoMessage(String msg) {
+  return SnackBar(
+    content: Container(
+        padding: const EdgeInsets.all(16),
+        height: 50,
+        width: 30,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            const Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+            Text(
+              msg,
+              style: const TextStyle(color: Color(0xfff9a825), fontSize: 14,fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        )),
+    behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.transparent,
     elevation: 0,
   );
