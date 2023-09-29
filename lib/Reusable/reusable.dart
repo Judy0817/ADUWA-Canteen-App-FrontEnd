@@ -1,3 +1,5 @@
+
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 Align SignInSignUpBtn(String text, Function() onTap) {
@@ -31,8 +33,8 @@ Align CanteenSet(String text, String imageName, Function() onTap) {
         onTap: onTap,
         child: Container(
             margin: EdgeInsets.all(15),
-            width: 150.0,
-            height: 150.0,
+            width: 135,
+            height: 135,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(35),
                 color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -41,8 +43,8 @@ Align CanteenSet(String text, String imageName, Function() onTap) {
               children: [
                 Image.asset(
                   "images/$imageName",
-                  width: 120,
-                  height: 120,
+                  width: 100,
+                  height: 100,
                 ), // Adjust the spacing between the image and text
                 Text(
                   text,

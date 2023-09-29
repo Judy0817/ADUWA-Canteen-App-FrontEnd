@@ -21,8 +21,8 @@ class _startState extends State<start> {
         child: Stack(
           children: [
             Container(
-              height: double.infinity,
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("images/first.png"),
@@ -32,13 +32,13 @@ class _startState extends State<start> {
               child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
                 padding: EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 35.0,
+                  horizontal: MediaQuery.of(context).size.height * 0.0375,
+                  vertical: MediaQuery.of(context).size.height * 0.0475,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    SizedBox(height: 1180,),
+                    SizedBox(height: MediaQuery.of(context).size.height * 1.8,),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -49,8 +49,8 @@ class _startState extends State<start> {
                         );
                       },
                       child: Container(
-                        width: 60.0,
-                        height: 60.0,
+                        width: MediaQuery.of(context).size.height * 0.08,
+                        height: MediaQuery.of(context).size.height * 0.08,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(50),
                           color: Color(0xfff9a825).withOpacity(0.7),

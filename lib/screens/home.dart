@@ -6,17 +6,15 @@ import 'opencanteen.dart';
 
 final double ffem = 45;
 const double fem = 10.0;
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
-
-
 }
 
 class _HomeState extends State<Home> {
-
   Widget SearchBar() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,8 +25,8 @@ class _HomeState extends State<Home> {
             color: Color.fromRGBO(217, 217, 217, 0.5),
             borderRadius: BorderRadius.circular(50),
           ),
-          height: 50,
-          width: 300.0,
+          width: MediaQuery.of(context).size.width * 0.65,
+          height: MediaQuery.of(context).size.height * 0.07,
           child: TextField(
             //controller: _emailTextController,
             keyboardType: TextInputType.emailAddress,
@@ -43,17 +41,14 @@ class _HomeState extends State<Home> {
                   color: Color(0xfff9a825),
                 ),
                 hintText: 'Search Here',
-                hintStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15
-                )),
+                hintStyle: TextStyle(color: Colors.white, fontSize: 15)),
           ),
         ),
-        SizedBox(width: 30,),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.06,
+        ),
         GestureDetector(
-          onTap: () {
-
-          },
+          onTap: () {},
           child: Container(
             width: 50.0,
             height: 50.0,
@@ -73,8 +68,8 @@ class _HomeState extends State<Home> {
       ],
     );
   }
-  @override
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -83,8 +78,8 @@ class _HomeState extends State<Home> {
           child: Stack(
             children: [
               Container(
-                height: double.infinity,
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("images/background.jpg"),
@@ -98,54 +93,59 @@ class _HomeState extends State<Home> {
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                    vertical: 30.0,
+                    horizontal: MediaQuery.of(context).size.height * 0.04,
+                    vertical: MediaQuery.of(context).size.height * 0.0775,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                          SizedBox(height: 80,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 240,
-                                child: Text("Find Your \nFavorite Food",
-                                  style: TextStyle (
-                                    fontSize:  30,
-                                    height: 1 ,
-                                    letterSpacing:  2,
-                                    fontWeight: FontWeight.bold,
-                                    color:  Color(0xffffffff),
-                                  ),),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20,),
-                          SearchBar(),
-                          SizedBox(height: 25,),
-                          Row(
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.07,
+                      ),
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: 180,
-                            child: Text("Popular Canteen",
-                              style: TextStyle (
-                                fontSize:  16,
-                                height: 1 ,
-                                letterSpacing:  1,
+                          Text(
+                            "Find Your \nFavorite Food",
+                            style: TextStyle(
+                              fontSize: 30,
+                              height: 1,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffffffff),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
+                      SearchBar(),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.04,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                         Text(
+                              "Popular Canteen",
+                              style: TextStyle(
+                                fontSize: 16,
+                                height: 1,
+                                letterSpacing: 1,
                                 fontWeight: FontWeight.bold,
-                                color:  Color(0xffffffff),
-                              ),),
-                          ),
+                                color: Color(0xffffffff),
+                              ),
+                            ),
                         ],
                       ),
-                          SizedBox(height: 25,),
-                          Row(
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.03,
+                      ),
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CanteenSet("Open Canteen","noodless.png", () async {
-
+                          CanteenSet("Open Canteen", "noodless.png", () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -153,8 +153,7 @@ class _HomeState extends State<Home> {
                               ),
                             );
                           }),
-                          CanteenSet("Gym Canteen","salad.png", () async {
-
+                          CanteenSet("Gym Canteen", "salad.png", () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -164,30 +163,27 @@ class _HomeState extends State<Home> {
                           }),
                         ],
                       ),
-                          Row(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CanteenSet("Rahula Canteen","fries.png", () async {
-
+                          CanteenSet("Rahula Canteen", "fries.png", () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const OpenCanteen(),
                               ),
                             );
-                          }),
-                          CanteenSet("Green Canteen","taco.png", () async {
-
+                          },),
+                          CanteenSet("Green Canteen", "taco.png", () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const OpenCanteen(),
                               ),
                             );
-                          }),
+                          },),
                         ],
                       ),
-
                     ],
                   ),
                 ),

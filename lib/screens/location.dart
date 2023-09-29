@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/home.dart';
-
 import 'map.dart';
 
 class location extends StatefulWidget {
@@ -21,8 +20,8 @@ class _locationState extends State<location> {
           child: Stack(
             children: [
               Container(
-                height: double.infinity,
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("images/background.jpg"),
@@ -36,20 +35,18 @@ class _locationState extends State<location> {
                 child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
-                    horizontal: 15.0,
-                    vertical: 35.0,
+                    horizontal: MediaQuery.of(context).size.height * 0.0375,
+                    vertical: MediaQuery.of(context).size.height * 0.0475,
                   ),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(height: 80),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              width: 290,
-                              child: Text(
+                            Text(
                                 "Set Your Location",
                                 style: TextStyle(
                                   fontSize: 30,
@@ -59,10 +56,9 @@ class _locationState extends State<location> {
                                   color: Color(0xffffffff),
                                 ),
                               ),
-                            ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
                         Text(
                           'Select University and current location here ! This data will be displayed in your profile for security perpose.',
                           style: TextStyle(
@@ -73,12 +69,12 @@ class _locationState extends State<location> {
                             color: Color(0xffffffff),
                           ),
                         ),
-                        SizedBox(height: 25),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.05,),
                         Container(
                           margin: EdgeInsets.all(10),
                           padding: EdgeInsets.only(left: 10),
-                          width: 350,
-                          height: 140,
+                          width: MediaQuery.of(context).size.height * 0.55,
+                          height: MediaQuery.of(context).size.height * 0.20,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -86,7 +82,7 @@ class _locationState extends State<location> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10),
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.015,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -96,7 +92,7 @@ class _locationState extends State<location> {
                                     color: Color(0xfff9a825),
                                   ),
                                   SizedBox(
-                                    width: 20,
+                                    width: MediaQuery.of(context).size.height * 0.02,
                                   ),
                                   Text(
                                     'Your university',
@@ -110,7 +106,7 @@ class _locationState extends State<location> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10,),
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.015,),
                               GestureDetector(
                                 onTap: (){
                                   Navigator.push(
@@ -120,8 +116,8 @@ class _locationState extends State<location> {
                                 },
                                 child: Container(
                                     margin: EdgeInsets.all(15),
-                                    width: 300,
-                                    height: 50.0,
+                                    width: MediaQuery.of(context).size.height * 0.45,
+                                    height: MediaQuery.of(context).size.height * 0.08,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(25),
                                       color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -140,12 +136,12 @@ class _locationState extends State<location> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.03,),
                         Container(
                           margin: EdgeInsets.all(10),
                           padding: EdgeInsets.only(left: 10),
-                          width: 350,
-                          height: 140,
+                          width: MediaQuery.of(context).size.height * 0.55,
+                          height: MediaQuery.of(context).size.height * 0.20,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(25),
                             color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -153,7 +149,7 @@ class _locationState extends State<location> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(height: 10),
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.015,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
@@ -163,7 +159,7 @@ class _locationState extends State<location> {
                                     color: Color(0xfff9a825),
                                   ),
                                   SizedBox(
-                                    width: 20,
+                                    width: MediaQuery.of(context).size.height * 0.02,
                                   ),
                                   Text(
                                     'Current Location',
@@ -177,7 +173,7 @@ class _locationState extends State<location> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 10,),
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.015,),
                               GestureDetector(
                                 onTap: (){
                                   Navigator.push(
@@ -187,8 +183,8 @@ class _locationState extends State<location> {
                                 },
                                 child: Container(
                                   margin: EdgeInsets.all(15),
-                                  width: 300,
-                                  height: 50.0,
+                                  width: MediaQuery.of(context).size.height * 0.45,
+                                  height: MediaQuery.of(context).size.height * 0.08,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(25),
                                     color: Color.fromRGBO(217, 217, 217, 0.5),
@@ -207,7 +203,7 @@ class _locationState extends State<location> {
                             ],
                           ),
                         ),
-                        SizedBox(height: 80,),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.08,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -222,8 +218,8 @@ class _locationState extends State<location> {
                               },
                               child: Container(
                                 margin: EdgeInsets.fromLTRB(14, 0, 20, 0),
-                                width: 150.0,
-                                height: 60.0,
+                                width: MediaQuery.of(context).size.height * 0.25,
+                                height: MediaQuery.of(context).size.height * 0.08,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(35),
                                   color: Color(0xfff9a825),

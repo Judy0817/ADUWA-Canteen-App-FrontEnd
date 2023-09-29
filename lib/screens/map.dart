@@ -18,7 +18,7 @@ class _MapState extends State<Map> {
   Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
 
   Set<Marker> markers = Set(); //markers for google map
-  LatLng showLocation = LatLng(6.853001341256969, 79.90359532519953);
+  LatLng showLocation = LatLng(6.85194825886, 79.9016563934);
 
   //location to show in map
   Widget searchLocation(){
@@ -104,7 +104,7 @@ class _MapState extends State<Map> {
           mapController?.animateCamera(CameraUpdate.newCameraPosition(
               CameraPosition(
                   target: LatLng(position.latitude, position.longitude),
-                  zoom: 14)));
+                  zoom: 5)));
 
           markers.clear();
 
