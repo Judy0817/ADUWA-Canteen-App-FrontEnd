@@ -70,14 +70,21 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/fries.png
-    - images/noodless.png
-    - images/salad.png
-    - images/taco.png
-    - images/pizza.png
     - images/first.png
     - images/background.jpg
-    - images/roti.jpg
+    - images/parata.jpg
+    - images/uludu.jpg
+    - images/thosa.jpg
+    - images/rice.jpg
+    - images/kottu.jpg
+    - images/rolls.jpg
+    - images/sandwidtch.jpg
+    - images/rice.jpg
+    - images/hoppers.jpg
+    - images/omletBun.jpg
+    - images/noodle.jpeg
+
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
