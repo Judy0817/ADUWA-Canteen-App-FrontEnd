@@ -115,6 +115,68 @@ class _AdminPageState extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    void _showForm() async {
+      // if (id != null) {
+      //   // final existingjournal =
+      //   // _journals.firstWhere((element) => element['id'] == id);
+      //   // _titleController.text = existingjournal['title'];
+      //   // _descriptionController.text = existingjournal['description'];
+      // }
+
+      showModalBottomSheet(
+          context: context,
+          elevation: 5,
+          isScrollControlled: true,
+          builder: (_)=>Container(
+            padding: EdgeInsets.only(
+              top: 15,
+              left: 15,
+              right: 15,
+              bottom: MediaQuery.of(context).viewInsets.bottom +120,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                TextField(
+                  //controller: _titleController,
+                  decoration: const InputDecoration(hintText: 'Food Name'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  //controller: _descriptionController,
+                  decoration: const InputDecoration(hintText: 'Price'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    // if(id==null){
+                    //   await _addItem();
+                    // }
+                    // if(id !=null){
+                    //   await _updateItem(id);
+                    // }
+                    // _titleController.text='';
+                    // _descriptionController.text = '';
+                    // Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xfff9a825), // Change this color to your desired background color
+                  ),
+                  child: Text('Create new',style: TextStyle(
+
+                  ),),
+                )
+              ],
+            ),
+          )
+      );
+    }
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -193,63 +255,39 @@ class _AdminPageState extends State<AdminPage> {
                                 width: MediaQuery.of(context).size.width,
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
                                 child: Card(
-                                  elevation: 5,
                                   color: Color.fromRGBO(217, 217, 217, 0.5),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: 60,
-                                              height: 60,
-                                              color: Colors.transparent,
-                                              child: CircleAvatar(
-                                                backgroundImage: AssetImage(
-                                                  images[index],
-                                                ),
-                                                backgroundColor: Colors
-                                                    .transparent, // Replace with your asset path
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 5.0,
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  names[index],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  price[index],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                                  margin: EdgeInsets.all(15),
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      backgroundImage: AssetImage('images/omletBun.jpg'),
+                                    ),
+                                    title: Text('Food Name',style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),),
+                                    subtitle: Text('Price',style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),),
+                                    trailing: SizedBox(
+                                      width: 100,
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(Icons.edit,color: Color(0xfff9a825),),
+                                            onPressed: ()=>_showForm(),
 
-                                      ],
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete,color: Color(0xfff9a825),), onPressed: () {  },
+                                            //onPressed: ()=>_deleteItem(_journals[index]['id']),
+
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -261,13 +299,8 @@ class _AdminPageState extends State<AdminPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const orderDetails(),
-                                ),
-                              );
+                            onTap: () {
+                              _showForm();
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(14, 0, 20, 0),

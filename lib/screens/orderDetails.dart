@@ -12,6 +12,7 @@ class orderDetails extends StatefulWidget {
 
 class _orderDetailsState extends State<orderDetails> {
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +38,7 @@ class _orderDetailsState extends State<orderDetails> {
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.height * 0.04,
-                    vertical: MediaQuery.of(context).size.height * 0.0775,
+                    vertical: MediaQuery.of(context).size.height * 0.11,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -45,10 +46,8 @@ class _orderDetailsState extends State<orderDetails> {
                       Text(
                         "Order Details",
                         style: TextStyle(
-                          fontSize: 40,
+                          fontSize: MediaQuery.of(context).size.height * 0.06,
                           fontWeight: FontWeight.w700,
-                          height: 1,
-                          letterSpacing: 2,
                           color: Color(0xffffffff),
                         ),
                       ),
@@ -57,11 +56,10 @@ class _orderDetailsState extends State<orderDetails> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.07,),
                         ),
                         child: Card(
                           color: Color.fromRGBO(217, 217, 217, 0.5),
-                          margin: EdgeInsets.all(7),
                           child: ListTile(
                             title: Text(
                               'Food Name',
@@ -77,14 +75,15 @@ class _orderDetailsState extends State<orderDetails> {
                                   fontWeight: FontWeight.bold),
                             ),
                             trailing: SizedBox(
-                              width: 100,
+                              width: MediaQuery.of(context).size.width * 0.23,
                               child: Row(
                                 children: [
+                                  Spacer(),
                                   Container(
                                     width: MediaQuery.of(context).size.height *
-                                        0.03,
+                                        0.04,
                                     height: MediaQuery.of(context).size.height *
-                                        0.03,
+                                        0.04,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: Color(0xfff9a825).withOpacity(0.5),
@@ -97,7 +96,7 @@ class _orderDetailsState extends State<orderDetails> {
                                         child: Icon(
                                           Icons.minimize,
                                           color: Color(0xffffffff),
-                                          size: 20,
+                                          size: MediaQuery.of(context).size.height * 0.04,
                                         ),
                                       ),
                                     ),
@@ -120,9 +119,9 @@ class _orderDetailsState extends State<orderDetails> {
                                   ),
                                   Container(
                                     width: MediaQuery.of(context).size.height *
-                                        0.03,
+                                        0.04,
                                     height: MediaQuery.of(context).size.height *
-                                        0.03,
+                                        0.04,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
                                       color: Color(0xfff9a825),
@@ -157,7 +156,7 @@ class _orderDetailsState extends State<orderDetails> {
                             Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               padding: EdgeInsets.fromLTRB(10, 15, 10, 5),
-                              width: MediaQuery.of(context).size.height * 0.37,
+                              width: MediaQuery.of(context).size.width * 0.75,
                               height: MediaQuery.of(context).size.height * 0.21,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
