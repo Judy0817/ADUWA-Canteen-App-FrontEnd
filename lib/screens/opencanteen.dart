@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/food_descrip.dart';
-import 'package:university_canteen/screens/viewCart.dart';
-
+import 'package:university_canteen/screens/orderDetails.dart';
 import '../Reusable/reusable.dart';
 import 'foodDataModel.dart';
 
@@ -340,7 +339,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const viewCart(),
+                                  builder: (context) => const orderDetails(),
                                 ),
                               );
                             },

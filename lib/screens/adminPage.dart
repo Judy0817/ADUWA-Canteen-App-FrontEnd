@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:university_canteen/screens/viewCart.dart';
+import 'package:university_canteen/screens/orderDetails.dart';
 
 import '../Reusable/reusable.dart';
 import 'home.dart';
@@ -265,7 +265,7 @@ class _AdminPageState extends State<AdminPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const viewCart(),
+                                  builder: (context) => const orderDetails(),
                                 ),
                               );
                             },
