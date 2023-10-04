@@ -38,7 +38,7 @@ class _orderDetailsState extends State<orderDetails> {
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.height * 0.04,
-                    vertical: MediaQuery.of(context).size.height * 0.11,
+                    vertical: MediaQuery.of(context).size.height * 0.04,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -157,7 +157,7 @@ class _orderDetailsState extends State<orderDetails> {
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               padding: EdgeInsets.fromLTRB(10, 15, 10, 5),
                               width: MediaQuery.of(context).size.width * 0.75,
-                              height: MediaQuery.of(context).size.height * 0.21,
+                              height: MediaQuery.of(context).size.height * 0.25,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 color: Color(0xfff9a825),
@@ -251,7 +251,7 @@ class _orderDetailsState extends State<orderDetails> {
                                             EdgeInsets.fromLTRB(14, 0, 20, 0),
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.64,
+                                                0.61,
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.06,

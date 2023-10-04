@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:university_canteen/Reusable/reusable.dart';
-
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:university_canteen/screens/location.dart';
+import '../AppbarPages/MenuPage.dart';
+import '../AppbarPages/notificationPage.dart';
+import '../AppbarPages/profilePage.dart';
 import 'opencanteen.dart';
 
 final double ffem = 45;
@@ -68,10 +72,89 @@ class _HomeState extends State<Home> {
       ],
     );
   }
+  int _currentIndex=0;
+  bool _isHomeActive = true;
+  bool _isProfileActive = false;
+  bool _isNotificationActive = false;
+  bool _isMenuActive = false;
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: GNav(
+          gap: 8,
+          backgroundColor: Colors.black,
+          color: Color(0xfff9a825),
+          activeColor: Color(0xffffffff),
+          tabBackgroundColor: Color.fromRGBO(217, 217, 217, 0.4235294117647059),
+          padding: EdgeInsets.all(15),
+          onTabChange: (index){
+            setState(() {
+              _currentIndex = index; // Update the current index when a tab is selected.
+
+              // Update the active states for each tab based on the selected index.
+              _isHomeActive = index == 0;
+              _isProfileActive = index == 1;
+              _isNotificationActive = index == 2;
+              _isMenuActive = index == 3;
+            });
+          },
+          tabs:[
+            GButton(
+              icon: Icons.home,
+              text: 'Home',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Home(), // Replace HomeScreen with your destination screen.
+                  ),
+                );
+              },
+              active: _isHomeActive,
+            ),
+            GButton(
+              icon: Icons.person,
+              text: 'Profile',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(), // Replace HomeScreen with your destination screen.
+                  ),
+                );
+              },
+              active: _isProfileActive,
+            ),
+            GButton(
+              icon: Icons.notifications,
+              text: 'Notification',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationPage(), // Replace HomeScreen with your destination screen.
+                  ),
+                );
+              },
+              active: _isNotificationActive,
+            ),
+
+            GButton(
+              icon: Icons.phone,
+              text: 'Contact',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MenuPage(), // Replace HomeScreen with your destination screen.
+                  ),
+                );
+              },
+              active: _isMenuActive,
+            ),
+          ]),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -94,13 +177,13 @@ class _HomeState extends State<Home> {
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.height * 0.04,
-                    vertical: MediaQuery.of(context).size.height * 0.0775,
+                    vertical: MediaQuery.of(context).size.height * 0.05,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.07,
+                        height: MediaQuery.of(context).size.height * 0.03,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,16 +210,16 @@ class _HomeState extends State<Home> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                         Text(
-                              "Popular Canteen",
-                              style: TextStyle(
-                                fontSize: 16,
-                                height: 1,
-                                letterSpacing: 1,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xffffffff),
-                              ),
+                          Text(
+                            "Popular Canteen",
+                            style: TextStyle(
+                              fontSize: 16,
+                              height: 1,
+                              letterSpacing: 1,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffffffff),
                             ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -153,7 +236,9 @@ class _HomeState extends State<Home> {
                               ),
                             );
                           }),
-                          SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01,
+                          ),
                           CanteenSet("Gym Canteen", "salad.png", () async {
                             Navigator.push(
                               context,
@@ -167,29 +252,40 @@ class _HomeState extends State<Home> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CanteenSet("Rahula Canteen", "fries.png", () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const OpenCanteen(),
-                              ),
-                            );
-                          },),
-                          SizedBox(width: MediaQuery.of(context).size.width * 0.01,),
-                          CanteenSet("Green Canteen", "taco.png", () async {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const OpenCanteen(),
-                              ),
-                            );
-                          },),
+                          CanteenSet(
+                            "Rahula Canteen",
+                            "fries.png",
+                            () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OpenCanteen(),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.01,
+                          ),
+                          CanteenSet(
+                            "Green Canteen",
+                            "taco.png",
+                            () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const OpenCanteen(),
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
+              //_pages[_currentIndex],
             ],
           ),
         ),

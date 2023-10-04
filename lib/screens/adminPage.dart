@@ -284,7 +284,6 @@ class _AdminPageState extends State<AdminPage> {
                                           IconButton(
                                             icon: const Icon(Icons.delete,color: Color(0xfff9a825),), onPressed: () {  },
                                             //onPressed: ()=>_deleteItem(_journals[index]['id']),
-
                                           )
                                         ],
                                       ),
