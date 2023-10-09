@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/orderDetails.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../Reusable/reusable.dart';
 import 'home.dart';
 
@@ -43,7 +44,7 @@ class _AdminPageState extends State<AdminPage> {
           ),
         ),
         SizedBox(
-          width: 30,
+          width: 10,
         ),
         GestureDetector(
           onTap: () {},
@@ -66,63 +67,161 @@ class _AdminPageState extends State<AdminPage> {
       ],
     );
   }
-
   bool isExpanded = false;
-
   void handleToggle() {
     setState(() {
       isExpanded = !isExpanded; // Toggle the state
     });
   }
 
-  List names = [
-    "Parata",
-    "Uludu Wade",
-    "Thosai",
-    "Rice",
-    "Koththu",
-    "Noodless",
-    "Rolls",
-    "Sandwidch",
-    "Hoppers",
-    "Omlet Bun"
-  ];
-  List price = [
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100 "
-  ];
+  // List names = [
+  //   "Parata",
+  //   "Uludu Wade",
+  //   "Thosai",
+  //   "Rice",
+  //   "Koththu",
+  //   "Noodless",
+  //   "Rolls",
+  //   "Sandwidch",
+  //   "Hoppers",
+  //   "Omlet Bun"
+  // ];
+  // List price = [
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100 "
+  // ];
+  // List images = [
+  //   "images/noodless.png",
+  //   "images/fries.png",
+  //   "images/noodless.png",
+  //   "images/pizza.png",
+  //   "images/noodless.png",
+  //   "images/noodless.png",
+  //   "images/noodless.png",
+  //   "images/noodless.png",
+  //   "images/noodless.png",
+  //   "images/noodless.png",
+  // ];
 
-  List images = [
-    "images/noodless.png",
-    "images/fries.png",
-    "images/noodless.png",
-    "images/pizza.png",
-    "images/noodless.png",
-    "images/noodless.png",
-    "images/noodless.png",
-    "images/noodless.png",
-    "images/noodless.png",
-    "images/noodless.png",
-  ];
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+
+  List<Map<String, dynamic>> dataList = [];
+  bool _isloading =true;
+
+  Future<void> insertRecord() async {
+    final apiUrl = Uri.parse("http://192.168.211.221:9090/insert_food");
+    final title = titleController.text;
+    final description = descriptionController.text;
+    final price = priceController.text;
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$apiUrl?name=${titleController.text}&description=${descriptionController.text}&price=${priceController.text}'),
+      );
+
+      if (response.statusCode == 200) {
+        print("Record inserted successfully!");
+        // Refresh the list view after insertion
+        //retrieveData();
+      } else {
+        throw Exception('Failed to insert record');
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+  Future<void> retrieveData() async {
+    final String url = 'http://192.168.211.221:9090/retrieve_food';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(() {
+        dataList = List<Map<String, dynamic>>.from(data);
+      });
+    } else {
+      print('Error retrieving data: ${response.body}');
+    }
+  }
+  Future<void> updateRecord(int id) async {
+
+    final int recordIdToDelete = id;
+    final String title = titleController.text;
+    final String description = descriptionController.text;
+    final String price= priceController.text;
+
+    if (id == 0 || title.isEmpty || description.isEmpty || price.isEmpty) {
+      // Validation: Check if fields are not empty and ID is valid.
+      print('Please enter valid data.');
+      return;
+    }
+
+    final Uri url = Uri.parse('http://192.168.211.221:9090/update_food/$recordIdToDelete');
+    final response = await http.get(
+      Uri.parse(
+          '$url?name=${titleController.text}&description=${descriptionController.text}&price=${priceController.text}'),
+    );
+
+    if (response.statusCode == 200) {
+      print('Record updated successfully');
+      _refreshRecord();
+    } else if (response.statusCode == 404) {
+      print('Record not found');
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
+  Future<void> deleteRecord(int id) async {
+    final int recordIdToDelete = id; // Replace with the ID of the record you want to delete
+
+    final response = await http.get(
+      Uri.parse('http://192.168.211.221:9090/delete_food/$recordIdToDelete'), // Replace with your server's URL
+    );
+
+    if (response.statusCode == 200) {
+      print('Record deleted successfully');
+      _refreshRecord();
+    } else if (response.statusCode == 404) {
+      print('Record not found');
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
+  Future<void> _refreshRecord() async {
+    final data = await retrieveData();
+    setState(() {
+      // dataList = data;
+      _isloading = false;
+    });
+  }
 
   @override
+  void initState() {
+    super.initState();
+    retrieveData();
+  }
   Widget build(BuildContext context) {
 
-    void _showForm() async {
-      // if (id != null) {
-      //   // final existingjournal =
-      //   // _journals.firstWhere((element) => element['id'] == id);
-      //   // _titleController.text = existingjournal['title'];
-      //   // _descriptionController.text = existingjournal['description'];
-      // }
+    void _showForm(int ? id) async {
+      if (id != null) {
+        final existingjournal =
+        dataList.firstWhere((element) => element['id'] == id);
+        titleController.text = existingjournal['name'];
+        descriptionController.text = existingjournal['description'];
+        priceController.text = existingjournal['price'];
+      }
 
       showModalBottomSheet(
           context: context,
@@ -140,14 +239,21 @@ class _AdminPageState extends State<AdminPage> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 TextField(
-                  //controller: _titleController,
+                  controller: titleController,
                   decoration: const InputDecoration(hintText: 'Food Name'),
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 TextField(
-                  //controller: _descriptionController,
+                  controller: descriptionController,
+                  decoration: const InputDecoration(hintText: 'Description'),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: priceController,
                   decoration: const InputDecoration(hintText: 'Price'),
                 ),
                 const SizedBox(
@@ -155,22 +261,22 @@ class _AdminPageState extends State<AdminPage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    // if(id==null){
-                    //   await _addItem();
-                    // }
-                    // if(id !=null){
-                    //   await _updateItem(id);
-                    // }
-                    // _titleController.text='';
-                    // _descriptionController.text = '';
-                    // Navigator.of(context).pop();
+                    if(id==null){
+                      await insertRecord();
+                      await retrieveData();
+                    }
+                    if(id !=null){
+                      await updateRecord(id);
+                    }
+                    titleController.text='';
+                    descriptionController.text = '';
+                    priceController.text = '';
+                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xfff9a825), // Change this color to your desired background color
                   ),
-                  child: Text('Create new',style: TextStyle(
-
-                  ),),
+                  child: Text(id==null ? 'Create new' : 'Update'),
                 )
               ],
             ),
@@ -245,52 +351,78 @@ class _AdminPageState extends State<AdminPage> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 20),
                       Container(
                         height: 400,
-                        child: ListView.builder(
-                          itemCount: 10,
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Card(
-                                  color: Color.fromRGBO(217, 217, 217, 0.5),
-                                  margin: EdgeInsets.all(15),
-                                  child: ListTile(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.symmetric(
+                            horizontal:10, vertical: 10
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        child: Card(
+                          color: Color.fromRGBO(217, 217, 217, 0.5),
+                          margin: EdgeInsets.all(15),
+                          child: Builder(
+                            builder: (BuildContext context) {
+                              return ListView.builder(
+                                itemCount: dataList.length,
+                                itemBuilder: (context, index) {
+                                  final item = dataList[index];
+                                  final id = item['id'];
+                                  final name = item['name'];
+                                  final description = item['description'];
+                                  final price = item['price'];
+                                  return ListTile(
                                     leading: CircleAvatar(
-                                      backgroundImage: AssetImage('images/omletBun.jpg'),
+                                      backgroundImage: AssetImage(
+                                          'images/kottu.jpg'),
                                     ),
-                                    title: Text('Food Name',style: TextStyle(
-                                        color: Colors.white,
+                                    title: Text(
+                                      name.toString(),
+                                      style: TextStyle(
                                         fontSize: 18,
-                                        fontWeight: FontWeight.bold),),
-                                    subtitle: Text('Price',style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),),
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffffffff),
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      description.toString(),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(0xffffffff),
+                                      ),
+                                    ),
                                     trailing: SizedBox(
                                       width: 100,
                                       child: Row(
                                         children: [
                                           IconButton(
-                                            icon: const Icon(Icons.edit,color: Color(0xfff9a825),),
-                                            onPressed: ()=>_showForm(),
-
+                                            icon: const Icon(Icons.edit,
+                                              color: Color(0xfff9a825),),
+                                            onPressed: (){
+                                              _showForm(item['id']);
+                                            }
                                           ),
                                           IconButton(
-                                            icon: const Icon(Icons.delete,color: Color(0xfff9a825),), onPressed: () {  },
-                                            //onPressed: ()=>_deleteItem(_journals[index]['id']),
+                                            icon: const Icon(Icons.delete,
+                                              color: Color(0xfff9a825),),
+                                            onPressed: () {
+                                              deleteRecord(id);
+                                            },
+
                                           )
                                         ],
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
+                                    // You can customize the appearance of each list item as needed.
+                                  );
+                                },
+                              );
+                            }
+                          ),
+
                         ),
                       ),
                       SizedBox(height: 20),
@@ -299,7 +431,7 @@ class _AdminPageState extends State<AdminPage> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              _showForm();
+                              _showForm(null);
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(14, 0, 20, 0),
@@ -321,6 +453,7 @@ class _AdminPageState extends State<AdminPage> {
                               ),
                             ),
                           ),
+
                         ],
                       )
                     ],
