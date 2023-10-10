@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:university_canteen/screens/food_descrip.dart';
 import 'package:university_canteen/screens/orderDetails.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../Reusable/reusable.dart';
 import 'home.dart';
+import 'opencanteen.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -72,6 +74,9 @@ class _AdminPageState extends State<AdminPage> {
     setState(() {
       isExpanded = !isExpanded; // Toggle the state
     });
+  }
+  List<Map<String, dynamic>> getDataList() {
+    return dataList;
   }
 
   // List names = [
@@ -158,11 +163,11 @@ class _AdminPageState extends State<AdminPage> {
   Future<void> updateRecord(int id) async {
 
     final int recordIdToDelete = id;
-    final String title = titleController.text;
+    final String name = titleController.text;
     final String description = descriptionController.text;
     final String price= priceController.text;
 
-    if (id == 0 || title.isEmpty || description.isEmpty || price.isEmpty) {
+    if (id == 0 || name.isEmpty || description.isEmpty || price.isEmpty) {
       // Validation: Check if fields are not empty and ID is valid.
       print('Please enter valid data.');
       return;
@@ -206,6 +211,19 @@ class _AdminPageState extends State<AdminPage> {
       _isloading = false;
     });
   }
+  static List images = [
+    "images/parata.jpg",
+    "images/uludu.jpg",
+    "images/thosa.jpg",
+    "images/rice.jpg",
+    "images/kottu.jpg",
+    "images/noodle.jpeg",
+    "images/rolls.jpg",
+    "images/sandwidtch.jpg",
+    "images/hoppers.jpg",
+    "images/omletBun.jpg",
+  ];
+
 
   @override
   void initState() {
@@ -213,6 +231,7 @@ class _AdminPageState extends State<AdminPage> {
     retrieveData();
   }
   Widget build(BuildContext context) {
+
 
     void _showForm(int ? id) async {
       if (id != null) {
@@ -272,6 +291,7 @@ class _AdminPageState extends State<AdminPage> {
                     descriptionController.text = '';
                     priceController.text = '';
                     Navigator.of(context).pop();
+
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xfff9a825), // Change this color to your desired background color
@@ -353,20 +373,8 @@ class _AdminPageState extends State<AdminPage> {
                       ),
                       SizedBox(height: 20),
                       Container(
-                        height: 400,
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(
-                            horizontal:10, vertical: 10
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: Card(
-                          color: Color.fromRGBO(217, 217, 217, 0.5),
-                          margin: EdgeInsets.all(15),
-                          child: Builder(
-                            builder: (BuildContext context) {
-                              return ListView.builder(
+                        height: MediaQuery.of(context).size.height * 0.55,
+                        child: ListView.builder(
                                 itemCount: dataList.length,
                                 itemBuilder: (context, index) {
                                   final item = dataList[index];
@@ -374,56 +382,71 @@ class _AdminPageState extends State<AdminPage> {
                                   final name = item['name'];
                                   final description = item['description'];
                                   final price = item['price'];
-                                  return ListTile(
-                                    leading: CircleAvatar(
-                                      backgroundImage: AssetImage(
-                                          'images/kottu.jpg'),
+                                  return Container(
+                                    margin: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(217, 217, 217, 0.5), // Background color
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    title: Text(
-                                      name.toString(),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xffffffff),
-                                      ),
-                                    ),
-                                    subtitle: Text(
-                                      description.toString(),
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(0xffffffff),
-                                      ),
-                                    ),
-                                    trailing: SizedBox(
-                                      width: 100,
-                                      child: Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(Icons.edit,
-                                              color: Color(0xfff9a825),),
-                                            onPressed: (){
-                                              _showForm(item['id']);
-                                            }
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) => const FoodDesc(fruitDataModel: fruitDataModel),
+                                        //   ),
+                                        // );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                        child: ListTile(
+                                          leading: CircleAvatar(
+                                            backgroundImage: AssetImage(
+                                              images[index],),
                                           ),
-                                          IconButton(
-                                            icon: const Icon(Icons.delete,
-                                              color: Color(0xfff9a825),),
-                                            onPressed: () {
-                                              deleteRecord(id);
-                                            },
+                                          title: Text(
+                                            name.toString(),
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Color(0xffffffff),
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            price.toString(),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Color(0xffffffff),
+                                            ),
+                                          ),
+                                          trailing: SizedBox(
+                                            width: 100,
+                                            child: Row(
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(Icons.edit,
+                                                    color: Color(0xfff9a825),),
+                                                  onPressed: () => _showForm(item['id']),
+                                                ),
+                                                IconButton(
+                                                  icon: const Icon(Icons.delete,
+                                                    color: Color(0xfff9a825),),
+                                                  onPressed: () {
+                                                    deleteRecord(id);
+                                                  },
 
-                                          )
-                                        ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          // You can customize the appearance of each list item as needed.
+                                        ),
                                       ),
                                     ),
-                                    // You can customize the appearance of each list item as needed.
                                   );
                                 },
-                              );
-                            }
-                          ),
+                              ),
 
-                        ),
                       ),
                       SizedBox(height: 20),
                       Row(

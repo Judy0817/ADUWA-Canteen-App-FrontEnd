@@ -3,7 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:university_canteen/screens/food_descrip.dart';
 import 'package:university_canteen/screens/orderDetails.dart';
 import '../Reusable/reusable.dart';
+import 'adminPage.dart';
 import 'foodDataModel.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OpenCanteen extends StatefulWidget {
   const OpenCanteen({Key? key}) : super(key: key);
@@ -74,31 +77,47 @@ class _OpenCanteenState extends State<OpenCanteen> {
       isExpanded = !isExpanded; // Toggle the state
     });
   }
+  List<Map<String, dynamic>> dataList = [];
 
-  static List names = [
-    "Parata",
-    "Uludu Wade",
-    "Thosai",
-    "Rice",
-    "Koththu",
-    "Noodless",
-    "Rolls",
-    "Sandwidch",
-    "Hoppers",
-    "Omlet Bun"
-  ];
-  static List price = [
-    "Rs. 200",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100",
-    "Rs. 100 "
-  ];
+  Future<void> retrieveData() async {
+    final String url = 'http://192.168.211.221:9090/retrieve_food';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(() {
+        dataList = List<Map<String, dynamic>>.from(data);
+      });
+    } else {
+      print('Error retrieving data: ${response.body}');
+    }
+  }
+
+  // static List names = [
+  //   "Parata",
+  //   "Uludu Wade",
+  //   "Thosai",
+  //   "Rice",
+  //   "Koththu",
+  //   "Noodless",
+  //   "Rolls",
+  //   "Sandwidch",
+  //   "Hoppers",
+  //   "Omlet Bun"
+  // ];
+  // static List price = [
+  //   "Rs. 200",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100",
+  //   "Rs. 100 "
+  // ];
   static List images = [
     "images/parata.jpg",
     "images/uludu.jpg",
@@ -111,26 +130,32 @@ class _OpenCanteenState extends State<OpenCanteen> {
     "images/hoppers.jpg",
     "images/omletBun.jpg",
   ];
-  static List descriptions = [
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-    "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  ];
-
-  final List<FruitDataModel> Fruitdata = List.generate(
-      names.length,
-      (index) => FruitDataModel(
-          '${names[index]}', '${images[index]}', '${descriptions[index]}'));
+  // static List descriptions = [
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
+  // ];
+  //
+  // final List<FruitDataModel> Fruitdata = List.generate(
+  //     names.length,
+  //         (index) => FruitDataModel(
+  //         '${names[index]}', '${images[index]}', '${descriptions[index]}'));
 
   @override
+  void initState() {
+    super.initState();
+    retrieveData();
+  }
+
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -202,130 +227,104 @@ class _OpenCanteenState extends State<OpenCanteen> {
                       Container(
                         height: MediaQuery.of(context).size.height * 0.55,
                         child: ListView.builder(
-                          itemCount: 10,
+                          itemCount: dataList.length,
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) =>
                               Container(
-                            width: MediaQuery.of(context).size.width,
-                            padding: EdgeInsets.symmetric(
-                              vertical:
-                                  MediaQuery.of(context).size.height * 0.005,
-                            ),
-                            child: Card(
-                              elevation: 5,
-                              color: Color.fromRGBO(217, 217, 217, 0.5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Container(
                                 width: MediaQuery.of(context).size.width,
                                 padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                      MediaQuery.of(context).size.height *
-                                          0.0175,
-                                  vertical: MediaQuery.of(context).size.height *
-                                      0.0175,
+                                  vertical: MediaQuery.of(context).size.height * 0.005,
                                 ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                child: Card(
+                                  elevation: 5,
+                                  color: Color.fromRGBO(217, 217, 217, 0.5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: MediaQuery.of(context).size.height *0.0175,
+                                      vertical: MediaQuery.of(context).size.height *0.0175,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.08,
-                                          color: Colors.transparent,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          FoodDesc(
-                                                            fruitDataModel:
-                                                                Fruitdata[
-                                                                    index],
-                                                          )));
-                                            },
-                                            child: CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                images[index],
-                                              ),
-                                              backgroundColor: Colors
-                                                  .transparent, // Replace with your asset path
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.03,
-                                        ),
-                                        Column(
+                                        Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              names[index],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
+                                            Container(
+                                              width: MediaQuery.of(context).size.width * 0.2,
+                                              height: MediaQuery.of(context).size.height * 0.08,
+                                              color: Colors.transparent,
+                                              child: GestureDetector(
+                                                onTap: () {
+
+                                                },
+                                                child: CircleAvatar(
+                                                  backgroundImage: AssetImage(
+                                                    images[index],
+                                                  ),
+                                                  backgroundColor: Colors.transparent, // Replace with your asset path
+                                                ),
+                                              ),
                                             ),
-                                            Text(
-                                              price[index],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width * 0.03,
+                                            ),
+                                            Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                              children: [
+                                                Text(dataList[index]['name'],style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xffffffff),
+                                                ),),
+                                                Text(dataList[index]['price'].toString(),
+                                                  style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Color(0xffffffff),
+                                                ),),
+                                              ],
                                             )
                                           ],
+                                        ),
+                                        Container(
+                                          alignment: Alignment.bottomRight,
+                                          width: 40,
+                                          // Set the width as needed
+                                          height: 40,
+                                          // Set the height as needed
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(50),
+                                            color:
+                                            Color(0xfff9a825).withOpacity(0.7),
+                                          ),
+                                          child: TextButton(
+                                            onPressed: () {
+                                              const snackBar = SnackBar(
+                                                  content: Text('Added to cart'));
+                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            },
+                                            style: TextButton.styleFrom(
+                                              primary: Colors.white,
+                                            ),
+                                            child: Text(
+                                              '+',
+                                              style: TextStyle(
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),
-                                    Container(
-                                      alignment: Alignment.bottomRight,
-                                      width: 40,
-                                      // Set the width as needed
-                                      height: 40,
-                                      // Set the height as needed
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color:
-                                            Color(0xfff9a825).withOpacity(0.7),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          const snackBar = SnackBar(
-                                              content: Text('Added to cart'));
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(snackBar);
-                                        },
-                                        style: TextButton.styleFrom(
-                                          primary: Colors.white,
-                                        ),
-                                        child: Text(
-                                          '+',
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
                         ),
                       ),
                       SizedBox(
@@ -347,7 +346,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                               margin: EdgeInsets.fromLTRB(14, 0, 20, 0),
                               width: MediaQuery.of(context).size.width * 0.30,
                               height:
-                                  MediaQuery.of(context).size.height * 0.0775,
+                              MediaQuery.of(context).size.height * 0.0775,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                                 color: Color(0xfff9a825),

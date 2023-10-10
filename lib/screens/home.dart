@@ -228,22 +228,22 @@ class _HomeState extends State<Home> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          CanteenSet("Open Canteen", "noodless.png", () async {
+                          CanteenSet("Open Canteen", "kottu.jpg", () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const OpenCanteen(),
+                                builder: (context) =>  OpenCanteen(),
                               ),
                             );
                           }),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.01,
                           ),
-                          CanteenSet("Gym Canteen", "salad.png", () async {
+                          CanteenSet("Gym Canteen", "kottu.jpg", () async {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const OpenCanteen(),
+                                builder: (context) =>  OpenCanteen(),
                               ),
                             );
                           }),
@@ -254,12 +254,12 @@ class _HomeState extends State<Home> {
                         children: [
                           CanteenSet(
                             "Rahula Canteen",
-                            "fries.png",
+                            "kottu.jpg",
                             () async {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const OpenCanteen(),
+                                  builder: (context) =>  OpenCanteen(),
                                 ),
                               );
                             },
@@ -269,12 +269,12 @@ class _HomeState extends State<Home> {
                           ),
                           CanteenSet(
                             "Green Canteen",
-                            "taco.png",
+                            "kottu.jpg",
                             () async {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const OpenCanteen(),
+                                  builder: (context) =>  OpenCanteen(),
                                 ),
                               );
                             },
