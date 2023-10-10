@@ -256,21 +256,32 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                           CrossAxisAlignment.start,
                                           children: [
                                             Container(
-                                              width: MediaQuery.of(context).size.width * 0.2,
-                                              height: MediaQuery.of(context).size.height * 0.08,
-                                              color: Colors.transparent,
-                                              child: GestureDetector(
-                                                onTap: () {
-
-                                                },
-                                                child: CircleAvatar(
-                                                  backgroundImage: AssetImage(
-                                                    images[index],
+                                                width: MediaQuery.of(context).size.width * 0.2,
+                                                height: MediaQuery.of(context).size.height * 0.08,
+                                                color: Colors.transparent,
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => FoodDesc(
+                                                          id: dataList[index]['id'],
+                                                          name: dataList[index]['name'],
+                                                          description: dataList[index]['description'],
+                                                          price: dataList[index]['price'],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: CircleAvatar(
+                                                    backgroundImage: AssetImage(
+                                                      images[index],
+                                                    ),
+                                                    backgroundColor: Colors.transparent, // Replace with your asset path
                                                   ),
-                                                  backgroundColor: Colors.transparent, // Replace with your asset path
                                                 ),
                                               ),
-                                            ),
+
                                             SizedBox(
                                               width: MediaQuery.of(context).size.width * 0.03,
                                             ),

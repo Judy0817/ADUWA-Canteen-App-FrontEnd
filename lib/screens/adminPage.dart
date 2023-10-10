@@ -12,6 +12,7 @@ class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
 
   @override
+
   State<AdminPage> createState() => _AdminPageState();
 }
 
@@ -75,8 +76,10 @@ class _AdminPageState extends State<AdminPage> {
       isExpanded = !isExpanded; // Toggle the state
     });
   }
-  List<Map<String, dynamic>> getDataList() {
-    return dataList;
+  @override
+  void initState() {
+    super.initState();
+    retrieveData();
   }
 
   // List names = [
@@ -223,86 +226,80 @@ class _AdminPageState extends State<AdminPage> {
     "images/hoppers.jpg",
     "images/omletBun.jpg",
   ];
+  void _showForm(int ? id) async {
+    if (id != null) {
+      final existingjournal =
+      dataList.firstWhere((element) => element['id'] == id);
+      titleController.text = existingjournal['name'];
+      descriptionController.text = existingjournal['description'];
+      priceController.text = existingjournal['price'];
+    }
+
+    showModalBottomSheet(
+        context: context,
+        elevation: 5,
+        isScrollControlled: true,
+        builder: (_)=>Container(
+          padding: EdgeInsets.only(
+            top: 15,
+            left: 15,
+            right: 15,
+            bottom: MediaQuery.of(context).viewInsets.bottom +120,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(hintText: 'Food Name'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: descriptionController,
+                decoration: const InputDecoration(hintText: 'Description'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: priceController,
+                decoration: const InputDecoration(hintText: 'Price'),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if(id==null){
+                    await insertRecord();
+                    await retrieveData();
+                  }
+                  if(id !=null){
+                    await updateRecord(id);
+                  }
+                  titleController.text='';
+                  descriptionController.text = '';
+                  priceController.text ;
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xfff9a825), // Change this color to your desired background color
+                ),
+                child: Text(id==null ? 'Create new' : 'Update'),
+              )
+            ],
+          ),
+        )
+    );
+  }
 
 
   @override
-  void initState() {
-    super.initState();
-    retrieveData();
-  }
   Widget build(BuildContext context) {
 
-
-    void _showForm(int ? id) async {
-      if (id != null) {
-        final existingjournal =
-        dataList.firstWhere((element) => element['id'] == id);
-        titleController.text = existingjournal['name'];
-        descriptionController.text = existingjournal['description'];
-        priceController.text = existingjournal['price'];
-      }
-
-      showModalBottomSheet(
-          context: context,
-          elevation: 5,
-          isScrollControlled: true,
-          builder: (_)=>Container(
-            padding: EdgeInsets.only(
-              top: 15,
-              left: 15,
-              right: 15,
-              bottom: MediaQuery.of(context).viewInsets.bottom +120,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(hintText: 'Food Name'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(hintText: 'Description'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextField(
-                  controller: priceController,
-                  decoration: const InputDecoration(hintText: 'Price'),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if(id==null){
-                      await insertRecord();
-                      await retrieveData();
-                    }
-                    if(id !=null){
-                      await updateRecord(id);
-                    }
-                    titleController.text='';
-                    descriptionController.text = '';
-                    priceController.text = '';
-                    Navigator.of(context).pop();
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Color(0xfff9a825), // Change this color to your desired background color
-                  ),
-                  child: Text(id==null ? 'Create new' : 'Update'),
-                )
-              ],
-            ),
-          )
-      );
-    }
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -374,6 +371,7 @@ class _AdminPageState extends State<AdminPage> {
                       SizedBox(height: 20),
                       Container(
                         height: MediaQuery.of(context).size.height * 0.55,
+                        width: MediaQuery.of(context).size.width * 0.8,
                         child: ListView.builder(
                                 itemCount: dataList.length,
                                 itemBuilder: (context, index) {
@@ -390,12 +388,17 @@ class _AdminPageState extends State<AdminPage> {
                                     ),
                                     child: GestureDetector(
                                       onTap: () {
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //     builder: (context) => const FoodDesc(fruitDataModel: fruitDataModel),
-                                        //   ),
-                                        // );
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => FoodDesc(
+                                              id: id,
+                                              name: name,
+                                              description: description,
+                                              price: price,
+                                            ),
+                                          ),
+                                        );
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -424,13 +427,13 @@ class _AdminPageState extends State<AdminPage> {
                                             child: Row(
                                               children: [
                                                 IconButton(
-                                                  icon: const Icon(Icons.edit,
-                                                    color: Color(0xfff9a825),),
-                                                  onPressed: () => _showForm(item['id']),
+                                                  icon: const Icon(Icons.edit, color: Color(0xfff9a825),),
+                                                  onPressed: () {
+                                                    _showForm(item['id']);
+                                                  },
                                                 ),
                                                 IconButton(
-                                                  icon: const Icon(Icons.delete,
-                                                    color: Color(0xfff9a825),),
+                                                  icon: const Icon(Icons.delete, color: Color(0xfff9a825),),
                                                   onPressed: () {
                                                     deleteRecord(id);
                                                   },
