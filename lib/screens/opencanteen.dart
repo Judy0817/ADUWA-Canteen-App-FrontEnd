@@ -78,6 +78,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
     });
   }
   List<Map<String, dynamic>> dataList = [];
+  bool _isloading =true;
 
   Future<void> retrieveData() async {
     final String url = 'http://192.168.211.221:9090/retrieve_food';
@@ -93,31 +94,14 @@ class _OpenCanteenState extends State<OpenCanteen> {
       print('Error retrieving data: ${response.body}');
     }
   }
+  Future<void> _refreshRecord() async {
+    final data = await retrieveData();
+    setState(() {
+      // dataList = data;
+      _isloading = false;
+    });
+  }
 
-  // static List names = [
-  //   "Parata",
-  //   "Uludu Wade",
-  //   "Thosai",
-  //   "Rice",
-  //   "Koththu",
-  //   "Noodless",
-  //   "Rolls",
-  //   "Sandwidch",
-  //   "Hoppers",
-  //   "Omlet Bun"
-  // ];
-  // static List price = [
-  //   "Rs. 200",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100 "
-  // ];
   static List images = [
     "images/parata.jpg",
     "images/uludu.jpg",
@@ -130,28 +114,12 @@ class _OpenCanteenState extends State<OpenCanteen> {
     "images/hoppers.jpg",
     "images/omletBun.jpg",
   ];
-  // static List descriptions = [
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  //   "Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil. Paratha are unleavened layered flatbreads made with whole wheat flour (atta), salt, water & ghee or oil.",
-  // ];
-  //
-  // final List<FruitDataModel> Fruitdata = List.generate(
-  //     names.length,
-  //         (index) => FruitDataModel(
-  //         '${names[index]}', '${images[index]}', '${descriptions[index]}'));
 
   @override
   void initState() {
     super.initState();
     retrieveData();
+    _refreshRecord();
   }
 
   Widget build(BuildContext context) {
@@ -209,6 +177,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
+
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -222,6 +191,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                               color: Color(0xffffffff),
                             ),
                           ),
+
                         ],
                       ),
                       Container(
@@ -316,6 +286,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                           ),
                                           child: TextButton(
                                             onPressed: () {
+
                                               const snackBar = SnackBar(
                                                   content: Text('Added to cart'));
                                               ScaffoldMessenger.of(context).showSnackBar(snackBar);

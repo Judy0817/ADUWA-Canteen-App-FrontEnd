@@ -80,44 +80,9 @@ class _AdminPageState extends State<AdminPage> {
   void initState() {
     super.initState();
     retrieveData();
+    _refreshRecord();
   }
 
-  // List names = [
-  //   "Parata",
-  //   "Uludu Wade",
-  //   "Thosai",
-  //   "Rice",
-  //   "Koththu",
-  //   "Noodless",
-  //   "Rolls",
-  //   "Sandwidch",
-  //   "Hoppers",
-  //   "Omlet Bun"
-  // ];
-  // List price = [
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100",
-  //   "Rs. 100 "
-  // ];
-  // List images = [
-  //   "images/noodless.png",
-  //   "images/fries.png",
-  //   "images/noodless.png",
-  //   "images/pizza.png",
-  //   "images/noodless.png",
-  //   "images/noodless.png",
-  //   "images/noodless.png",
-  //   "images/noodless.png",
-  //   "images/noodless.png",
-  //   "images/noodless.png",
-  // ];
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
@@ -168,18 +133,25 @@ class _AdminPageState extends State<AdminPage> {
     final int recordIdToDelete = id;
     final String name = titleController.text;
     final String description = descriptionController.text;
-    final String price= priceController.text;
+    double price;
 
-    if (id == 0 || name.isEmpty || description.isEmpty || price.isEmpty) {
+    if (id == 0 || name.isEmpty || description.isEmpty) {
       // Validation: Check if fields are not empty and ID is valid.
       print('Please enter valid data.');
       return;
     }
+    try {
+      price = double.parse(priceController.text);
+    } catch (e) {
+      print('Invalid price format');
+      return;
+    }
+
 
     final Uri url = Uri.parse('http://192.168.211.221:9090/update_food/$recordIdToDelete');
     final response = await http.get(
       Uri.parse(
-          '$url?name=${titleController.text}&description=${descriptionController.text}&price=${priceController.text}'),
+          '$url?name=${titleController.text}&description=${descriptionController.text}&price=$price'),
     );
 
     if (response.statusCode == 200) {
@@ -232,7 +204,12 @@ class _AdminPageState extends State<AdminPage> {
       dataList.firstWhere((element) => element['id'] == id);
       titleController.text = existingjournal['name'];
       descriptionController.text = existingjournal['description'];
-      priceController.text = existingjournal['price'];
+      priceController.text = existingjournal['price'].toString();
+    }else {
+      // Clear the text fields when creating a new record
+      titleController.text = '';
+      descriptionController.text = '';
+      priceController.text = '';
     }
 
     showModalBottomSheet(
@@ -282,7 +259,7 @@ class _AdminPageState extends State<AdminPage> {
                   }
                   titleController.text='';
                   descriptionController.text = '';
-                  priceController.text ;
+                  priceController.text='' ;
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
