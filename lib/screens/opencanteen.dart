@@ -80,8 +80,10 @@ class _OpenCanteenState extends State<OpenCanteen> {
   List<Map<String, dynamic>> dataList = [];
   bool _isloading =true;
 
+  String baseUrl = 'http://192.168.211.221:9090';
+
   Future<void> retrieveData() async {
-    final String url = 'http://192.168.211.221:9090/retrieve_food';
+    final String url = '$baseUrl/retrieve_food';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -100,6 +102,31 @@ class _OpenCanteenState extends State<OpenCanteen> {
       // dataList = data;
       _isloading = false;
     });
+  }
+  Future<void> addToCart(double price) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/add_to_cart?price=$price'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      }, // Replace with your item's price
+    );
+
+    if (response.statusCode == 200) {
+      print('Item added to cart successfully');
+    } else {
+      print('Failed to add item to cart. Error ${response.statusCode}');
+    }
+  }
+
+  Future<void> getTotalPrice() async {
+    final response = await http.get(Uri.parse('$baseUrl/get_total_price'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('Total Price: ${data['total_price']}');
+    } else {
+      print('Failed to get total price. Error ${response.statusCode}');
+    }
   }
 
   static List images = [
@@ -286,7 +313,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                           ),
                                           child: TextButton(
                                             onPressed: () {
-
+                                              addToCart(dataList[index]['price']);
                                               const snackBar = SnackBar(
                                                   content: Text('Added to cart'));
                                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -317,12 +344,13 @@ class _OpenCanteenState extends State<OpenCanteen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const orderDetails(),
-                                ),
-                              );
+                              getTotalPrice();
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => const orderDetails(),
+                              //   ),
+                              // );
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(14, 0, 20, 0),

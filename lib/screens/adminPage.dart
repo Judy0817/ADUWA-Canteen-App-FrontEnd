@@ -91,8 +91,10 @@ class _AdminPageState extends State<AdminPage> {
   List<Map<String, dynamic>> dataList = [];
   bool _isloading =true;
 
+  String baseUrl = 'http://192.168.211.221:9090';
+
   Future<void> insertRecord() async {
-    final apiUrl = Uri.parse("http://192.168.211.221:9090/insert_food");
+    final apiUrl = Uri.parse("$baseUrl/insert_food");
     final title = titleController.text;
     final description = descriptionController.text;
     final price = priceController.text;
@@ -115,7 +117,7 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
   Future<void> retrieveData() async {
-    final String url = 'http://192.168.211.221:9090/retrieve_food';
+    final String url = '$baseUrl/retrieve_food';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -148,7 +150,7 @@ class _AdminPageState extends State<AdminPage> {
     }
 
 
-    final Uri url = Uri.parse('http://192.168.211.221:9090/update_food/$recordIdToDelete');
+    final Uri url = Uri.parse('$baseUrl/update_food/$recordIdToDelete');
     final response = await http.get(
       Uri.parse(
           '$url?name=${titleController.text}&description=${descriptionController.text}&price=$price'),
@@ -167,7 +169,7 @@ class _AdminPageState extends State<AdminPage> {
     final int recordIdToDelete = id; // Replace with the ID of the record you want to delete
 
     final response = await http.get(
-      Uri.parse('http://192.168.211.221:9090/delete_food/$recordIdToDelete'), // Replace with your server's URL
+      Uri.parse('$baseUrl/delete_food/$recordIdToDelete'), // Replace with your server's URL
     );
 
     if (response.statusCode == 200) {
