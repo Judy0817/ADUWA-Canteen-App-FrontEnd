@@ -4,7 +4,6 @@ import 'package:university_canteen/Reusable/reusable.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:university_canteen/screens/location.dart';
 import '../AppbarPages/MenuPage.dart';
-import '../AppbarPages/notificationPage.dart';
 import '../AppbarPages/profilePage.dart';
 import 'opencanteen.dart';
 
@@ -134,7 +133,7 @@ class _HomeState extends State<Home> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NotificationPage(), // Replace HomeScreen with your destination screen.
+                    builder: (context) => ProfilePage(), // Replace HomeScreen with your destination screen.
                   ),
                 );
               },

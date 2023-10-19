@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:university_canteen/screens/location.dart';
+import 'package:university_canteen/screens/login.dart';
 import 'package:university_canteen/screens/start.dart';
 import '../Reusable/reusable.dart';
 import 'adminPage.dart';
 import 'home.dart';
+import 'package:http/http.dart' as http;
 
 final double ffem = 45;
 const double fem = 10.0;
@@ -23,6 +25,30 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _userNameTextController = TextEditingController();
 
   bool isRememberMe = false;
+
+  String baseUrl = 'http://192.168.211.221:9090';
+  Future<void> insertRecord() async {
+    final apiUrl = Uri.parse("$baseUrl/store_user_data");
+    final email = _emailTextController.text;
+    final username = _userNameTextController.text;
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$apiUrl?username=${_userNameTextController.text}&email=${_emailTextController.text}'),
+      );
+
+      if (response.statusCode == 200) {
+        print("User inserted successfully!");
+        // Refresh the list view after insertion
+        //retrieveData();
+      } else {
+        throw Exception('Failed to insert user');
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 
   Widget buildEmail() {
     return Column(
@@ -235,8 +261,11 @@ class _SignUpState extends State<SignUp> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => const location(
-                                          ),
+                                          builder: (context){
+                                            insertRecord();
+
+                                            return const LoginScreen();
+                                          }
                                         ));
                                   }else if(domain=='admin.ac.lk'){
                                     UserCredential userCredential = await FirebaseAuth

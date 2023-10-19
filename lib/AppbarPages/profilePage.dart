@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../screens/home.dart';
 import 'MenuPage.dart';
-import 'notificationPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,7 +19,61 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isProfileActive = true;
   bool _isNotificationActive = false;
   bool _isMenuActive = false;
+  String baseUrl = 'http://192.168.211.221:9090';
+
+  
+  Future<String?> getCurrentUserEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.email;
+    } else {
+      return null;// No user is signed in
+    }
+  }
+  Future<String> fetchUserName(String userEmail) async {
+    final String url = '$baseUrl/retrieve_username?email=$userEmail';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to load user name');
+    }
+  }
+  Future<String?> getUserName() async {
+    // Get the current user's email
+    String? userEmail = await getCurrentUserEmail();
+
+    if (userEmail != null) {
+        // Call fetchUserName with the user's email
+        String userName = await fetchUserName(userEmail);
+        return userName ;
+
+    } else {
+      return null;
+    }
+  }
+  String? userEmail;
+  String? USERName;
   @override
+  void initState() {
+    super.initState();
+    // Fetch the user's email when the app starts.
+    getCurrentUserEmail().then((email) {
+      setState(() {
+        userEmail = email;
+      });
+      if (email != null) {
+        getUserName().then((userName) {
+          setState(() {
+            USERName = userName;
+          });
+        });
+      }
+    });
+
+
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: GNav(
@@ -74,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NotificationPage(), // Replace HomeScreen with your destination screen.
+                    builder: (context) => Home(), // Replace HomeScreen with your destination screen.
                   ),
                 );
               },
@@ -132,6 +187,38 @@ class _ProfilePageState extends State<ProfilePage> {
                             "My Profile",
                             style: TextStyle(
                               fontSize: 30,
+                              height: 1,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffffffff),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 40,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "My Email           : $userEmail",
+                            style: TextStyle(
+                              fontSize: 15,
+                              height: 1,
+                              letterSpacing: 2,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xffffffff),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "My User Name   : $USERName",
+                            style: TextStyle(
+                              fontSize: 15,
                               height: 1,
                               letterSpacing: 2,
                               fontWeight: FontWeight.bold,

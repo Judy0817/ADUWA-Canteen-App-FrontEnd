@@ -8,6 +8,7 @@ import 'foodDataModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 class OpenCanteen extends StatefulWidget {
   const OpenCanteen({Key? key}) : super(key: key);
 
@@ -81,7 +82,52 @@ class _OpenCanteenState extends State<OpenCanteen> {
   bool _isloading =true;
 
   String baseUrl = 'http://192.168.211.221:9090';
+  String? getFoodName(int index) {
+    if (index >= 0 && index < dataList.length) {
+      return dataList[index]['food_name'] as String?;
+    }
+    return null;
+  }
 
+  double? getPrice(int index) {
+    if (index >= 0 && index < dataList.length) {
+      return dataList[index]['price'] as double?;
+    }
+    return null;
+  }
+
+  String? getDescription(int index) {
+    if (index >= 0 && index < dataList.length) {
+      return dataList[index]['description'] as String?;
+    }
+    return null;
+  }
+
+  // Future<void> insertOrder() async {
+  //   final apiUrl = Uri.parse("$baseUrl/insert_bucket");
+  //
+  //   try {
+  //     Map<String, String> data = {
+  //       'FoodName': dataList[index]['name'],
+  //       'Price': dataList[index]['price'].toString(),
+  //       // Add other data fields as needed
+  //     };
+  //
+  //     Uri uri = Uri.https('', url, data); // Create a Uri with the data as query parameters
+  //
+  //     final response = await http.get(uri);
+  //
+  //     if (response.statusCode == 200) {
+  //       print("Record inserted successfully!");
+  //       // Refresh the list view after insertion
+  //       //retrieveData();
+  //     } else {
+  //       throw Exception('Failed to insert record');
+  //     }
+  //   } catch (e) {
+  //     print("Error: $e");
+  //   }
+  // }
   Future<void> retrieveData() async {
     final String url = '$baseUrl/retrieve_food';
     final response = await http.get(Uri.parse(url));
@@ -103,31 +149,30 @@ class _OpenCanteenState extends State<OpenCanteen> {
       _isloading = false;
     });
   }
-  Future<void> addToCart(double price) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/add_to_cart?price=$price'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      }, // Replace with your item's price
-    );
-
-    if (response.statusCode == 200) {
-      print('Item added to cart successfully');
-    } else {
-      print('Failed to add item to cart. Error ${response.statusCode}');
-    }
-  }
-
-  Future<void> getTotalPrice() async {
-    final response = await http.get(Uri.parse('$baseUrl/get_total_price'));
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      print('Total Price: ${data['total_price']}');
-    } else {
-      print('Failed to get total price. Error ${response.statusCode}');
-    }
-  }
+  // Future<void> addToCart(double price) async {
+  //   final response = await http.get(
+  //     Uri.parse('$baseUrl/add_to_cart?price=$price'),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     }, // Replace with your item's price
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     print('Item added to cart successfully');
+  //   } else {
+  //     print('Failed to add item to cart. Error ${response.statusCode}');
+  //   }
+  // }
+  // Future<void> getTotalPrice() async {
+  //   final response = await http.get(Uri.parse('$baseUrl/get_total_price'));
+  //
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     print('Total Price: ${data['total_price']}');
+  //   } else {
+  //     print('Failed to get total price. Error ${response.statusCode}');
+  //   }
+  // }
 
   static List images = [
     "images/parata.jpg",
@@ -148,6 +193,17 @@ class _OpenCanteenState extends State<OpenCanteen> {
     retrieveData();
     _refreshRecord();
   }
+
+  // Future<String> getCurrentUserEmail() async {
+  //   final response = await http.get('YOUR_SERVER_ENDPOINT_HERE');
+  //
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     return data['email'];
+  //   } else {
+  //     throw Exception('Failed to load user email');
+  //   }
+  // }
 
   Widget build(BuildContext context) {
 
@@ -312,11 +368,30 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                             Color(0xfff9a825).withOpacity(0.7),
                                           ),
                                           child: TextButton(
-                                            onPressed: () {
-                                              addToCart(dataList[index]['price']);
-                                              const snackBar = SnackBar(
-                                                  content: Text('Added to cart'));
-                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            onPressed: () async {
+                                              // Define the URL of your Python backend
+                                              String url = 'http://192.168.211.221:9090/insert_bucket';
+                                              Map<String, String> data = {
+                                                'FoodName': dataList[index]['name'],
+                                                'Price': dataList[index]['price'].toString(),
+                                                // Add other data fields as needed
+                                              };
+
+                                              Uri uri = Uri.https('', url, data); // Create a Uri with the data as query parameters
+
+                                              final response = await http.get(uri);
+
+                                              if (response.statusCode == 200) {
+                                                // Request was successful
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(content: Text('Added to cart')),
+                                                );
+                                              } else {
+                                                // Request failed
+                                                ScaffoldMessenger.of(context).showSnackBar(
+                                                  SnackBar(content: Text('Failed to add to cart')),
+                                                );
+                                              }
                                             },
                                             style: TextButton.styleFrom(
                                               primary: Colors.white,
@@ -327,7 +402,8 @@ class _OpenCanteenState extends State<OpenCanteen> {
                                                 fontSize: 15,
                                               ),
                                             ),
-                                          ),
+                                          )
+
                                         )
                                       ],
                                     ),
@@ -344,13 +420,14 @@ class _OpenCanteenState extends State<OpenCanteen> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              getTotalPrice();
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const orderDetails(),
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context){
+                                    return const orderDetails();
+                                  },
+                                ),
+                              );
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(14, 0, 20, 0),
@@ -374,7 +451,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

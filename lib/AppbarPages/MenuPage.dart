@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:university_canteen/AppbarPages/profilePage.dart';
 import '../screens/home.dart';
-import 'notificationPage.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -87,7 +86,7 @@ class _MenuPageState extends State<MenuPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NotificationPage(), // Replace HomeScreen with your destination screen.
+                    builder: (context) => ProfilePage(), // Replace HomeScreen with your destination screen.
                   ),
                 );
               },
