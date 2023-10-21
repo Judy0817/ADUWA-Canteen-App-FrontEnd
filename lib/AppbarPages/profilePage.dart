@@ -71,8 +71,6 @@ class _ProfilePageState extends State<ProfilePage> {
         });
       }
     });
-
-
   }
   Widget build(BuildContext context) {
     return Scaffold(

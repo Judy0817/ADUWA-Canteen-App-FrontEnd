@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'package:http/http.dart' as http;
 import 'home.dart';
 
 class orderDetails extends StatefulWidget {
@@ -12,8 +14,121 @@ class orderDetails extends StatefulWidget {
 
 class _orderDetailsState extends State<orderDetails> {
 
+  String baseUrl = 'http://192.168.211.221:9090';
+  List<Map<String, dynamic>> dataList = [];
+  bool _isloading =true;
+
+  Future<void> retrieveData() async {
+    final String url = '$baseUrl/retrieve_bucket';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(() {
+        dataList = List<Map<String, dynamic>>.from(data);
+      });
+    } else {
+      print('Error retrieving data: ${response.body}');
+    }
+  }
+  double totalPrice=0;
+  String error = '';
+
+  Future<void> fetchTotalPrice() async {
+    final response = await http.get(Uri.parse('$baseUrl/get_total_price2'));
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        totalPrice = data['total_price'];
+      });
+    } else {
+      setState(() {
+        error = 'Error: Failed to fetch total price';
+      });
+    }
+  }
+  Future<void> _refreshRecord1() async {
+    final data = await retrieveData();
+    setState(() {
+      // dataList = data;
+      _isloading = true;
+    });
+  }
+  Future<void> _refreshRecord2() async {
+    final data = await fetchTotalPrice();
+    setState(() {
+      // dataList = data;
+      _isloading = true;
+    });
+  }
+  Map<String, int> foodQuantity = {};
+  void increaseValue(String foodName) {
+    setState(() {
+      if (foodQuantity.containsKey(foodName)) {
+        foodQuantity[foodName] = (foodQuantity[foodName] ?? 0).toInt() + 1;
+
+      } else {
+        foodQuantity[foodName] = 1; // Initialize quantity to 1 if it doesn't exist
+      }
+    });
+  }
+
+  void decreaseValue(String foodName) {
+    setState(() {
+      if (foodQuantity.containsKey(foodName) && (foodQuantity[foodName] ?? 0).toInt() > 1) {
+        foodQuantity[foodName] = (foodQuantity[foodName] ?? 0).toInt() - 1;
+
+      } else {
+        foodQuantity.remove(foodName); // Remove the food item if quantity is 1 or less
+      }
+    });
+  }
+  double calculateSubtotal(int quantity, double price) {
+    double subtotal =  quantity * price;
+    return subtotal;
+  }
+
+  double? getQuantity(int index) {
+    if (index >= 0 && index < dataList.length) {
+      return dataList[index]['Quantity'] as double?;
+    }
+    return null;
+  }
+
+  Future<void> updateRecord(int id,int Quantity, double SubTotal) async {
+
+    final int recordIdToDelete = id;
+
+    if (id == 0 || Quantity==0 || SubTotal==0) {
+      // Validation: Check if fields are not empty and ID is valid.
+      print('Please enter valid data.');
+      return;
+    }
+    final Uri url = Uri.parse('$baseUrl/update_bucket/$recordIdToDelete');
+    final response = await http.get(
+      Uri.parse(
+          '$url?Quantity=${Quantity}&SubTotal=${SubTotal}'),
+    );
+
+    if (response.statusCode == 200) {
+      print('Record updated successfully');
+      _refreshRecord1();
+    } else if (response.statusCode == 404) {
+      print('Not Updated');
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
 
   @override
+  void initState() {
+    super.initState();
+    retrieveData();
+    fetchTotalPrice();
+    _refreshRecord2();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -55,98 +170,127 @@ class _orderDetailsState extends State<orderDetails> {
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
                       Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.07,),
-                        ),
-                        child: Card(
-                          color: Color.fromRGBO(217, 217, 217, 0.5),
-                          child: ListTile(
-                            title: Text(
-                              'Food Name',
-                              style: TextStyle(
-                                color: Color(0xffffffff),
-                              ),
-                            ),
-                            subtitle: Text(
-                              'Price',
-                              style: TextStyle(
-                                  color: Color(0xfff9a825),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            trailing: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.23,
-                              child: Row(
-                                children: [
-                                  Spacer(),
-                                  Container(
-                                    width: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Color(0xfff9a825).withOpacity(0.5),
-                                    ),
-                                    child: InkWell(
-                                      onTap: (){
+                          height: MediaQuery.of(context).size.height * 0.55,
+                          child: ListView.builder(
+                            itemCount: dataList.length,
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext context, int index) =>
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(MediaQuery.of(context).size.height * 0.1,),
+                                  ),
+                                  child: Card(
+                                    color: Color.fromRGBO(217, 217, 217, 0.5),
+                                    child: ListTile(
+                                      title: Text(dataList[index]['FoodName'],style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xffffffff),
+                                      ),),
+                                      subtitle: Text(
+                                        'Rs. ' + dataList[index]['Price'].toString(),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Color(0xfff9a825),
+                                          fontWeight: FontWeight.bold
+                                        ),),
+                                      trailing: SizedBox(
+                                        width: MediaQuery.of(context).size.width * 0.35,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context).size.height *
+                                                  0.04,
+                                              height: MediaQuery.of(context).size.height *
+                                                  0.04,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8),
+                                                color: Color(0xfff9a825).withOpacity(0.5),
+                                              ),
+                                              child: InkWell(
+                                                onTap: (){
+                                                  decreaseValue(dataList[index]['FoodName']);
+                                                },
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.minimize,
+                                                    color: Color(0xffffffff),
+                                                    size: MediaQuery.of(context).size.height * 0.04,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width *
+                                                  0.01,
+                                            ),
+                                            Text(
+                                              '${foodQuantity[dataList[index]['FoodName']] ?? 1}',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xffffffff),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width *
+                                                  0.00,
+                                            ),
+                                            Container(
+                                              width: MediaQuery.of(context).size.height *
+                                                  0.04,
+                                              height: MediaQuery.of(context).size.height *
+                                                  0.04,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(8),
+                                                color: Color(0xfff9a825),
+                                              ),
+                                              child: InkWell(
+                                                onTap: (){
+                                                  increaseValue(dataList[index]['FoodName']);
+                                                },
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    color: Color(0xffffffff),
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: MediaQuery.of(context).size.width *
+                                                  0.01,
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                String foodName = dataList[index]['FoodName'].toString();
+                                                double price = double.tryParse(dataList[index]['Price']) ?? 0.0;
+                                                int quantity = foodQuantity[dataList[index]['FoodName'].toString()] ?? 1;
 
-                                      },
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.minimize,
-                                          color: Color(0xffffffff),
-                                          size: MediaQuery.of(context).size.height * 0.04,
+                                                double subtotalValue = calculateSubtotal(quantity, price);
+
+                                                updateRecord(dataList[index]['OrderID'], quantity, subtotalValue);
+                                                // addToCart(dataList[index]['name'], dataList[index]['price']);
+                                              },
+
+                                              style: TextButton.styleFrom(
+                                                primary: Colors.white,
+                                              ),
+                                              child: Text(
+                                                '+',
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.03,
-                                  ),
-                                  Text(
-                                    '2',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(0xffffffff),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.03,
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Color(0xfff9a825),
-                                    ),
-                                    child: InkWell(
-                                      onTap: (){
-
-                                      },
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.add,
-                                          color: Color(0xffffffff),
-                                          size: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.50,
+                                ),
+                        )
                       ),
                       Align(
                         alignment: Alignment.bottomCenter,
@@ -176,7 +320,7 @@ class _orderDetailsState extends State<orderDetails> {
                                       ),
                                       Spacer(),
                                       Text(
-                                        'Price',
+                                        totalPrice.toString(),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -197,7 +341,7 @@ class _orderDetailsState extends State<orderDetails> {
                                       ),
                                       Spacer(),
                                       Text(
-                                        'Price',
+                                        'Rs. 50.0',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -222,7 +366,7 @@ class _orderDetailsState extends State<orderDetails> {
                                       ),
                                       Spacer(),
                                       Text(
-                                        'Price',
+                                        'Rs. '+(totalPrice+50.00).toString(),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
