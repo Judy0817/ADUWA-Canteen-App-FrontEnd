@@ -35,20 +35,18 @@ class _orderDetailsState extends State<orderDetails> {
   double totalPrice=0;
   String error = '';
 
-  Future<void> fetchTotalPrice() async {
+  Future<double> fetchTotalPrice() async {
     final response = await http.get(Uri.parse('$baseUrl/get_total_price2'));
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      setState(() {
-        totalPrice = data['total_price'];
-      });
+      final Map<String, dynamic> data = json.decode(response.body);
+      final double totalPrice = double.parse(data['total_price'].toString());
+      return totalPrice;
     } else {
-      setState(() {
-        error = 'Error: Failed to fetch total price';
-      });
+      throw Exception('Failed to load total price');
     }
   }
+
   Future<void> _refreshRecord1() async {
     final data = await retrieveData();
     setState(() {
@@ -97,6 +95,32 @@ class _orderDetailsState extends State<orderDetails> {
     return null;
   }
 
+  // Future<void> updateRecord(int id, int Quantity, double SubTotal) async {
+  //
+  //   final int recordIdToDelete = id;
+  //
+  //   if (id == 0 || Quantity==0 || SubTotal==0) {
+  //     // Validation: Check if fields are not empty and ID is valid.
+  //     print('Please enter valid data.');
+  //     return;
+  //   }
+  //   final Uri url = Uri.parse('$baseUrl/update_bucket/$recordIdToDelete');
+  //   final Map<String, String> queryParams = {
+  //     'Quantity': Quantity.toString(),
+  //     'SubTotal': SubTotal.toString(),
+  //   };
+  //   url.replace(queryParameters: queryParams);
+  //
+  //   final response = await http.get(url);
+  //   if (response.statusCode == 200) {
+  //     print('Record updated successfully');
+  //     _refreshRecord1();
+  //   } else if (response.statusCode == 404) {
+  //     print('Not Updated');
+  //   } else {
+  //     print('Error: ${response.statusCode}');
+  //   }
+  // }
   Future<void> updateRecord(int id,int Quantity, double SubTotal) async {
 
     final int recordIdToDelete = id;
@@ -122,12 +146,16 @@ class _orderDetailsState extends State<orderDetails> {
     }
   }
 
+
+  Future<void> fetchData() async {
+    await retrieveData(); // Wait for retrieveData to complete before moving to fetchTotalPrice
+    await fetchTotalPrice(); // Wait for fetchTotalPrice to complete
+  }
+
   @override
   void initState() {
     super.initState();
-    retrieveData();
-    fetchTotalPrice();
-    _refreshRecord2();
+    fetchData(); // Call a combined function to retrieve data and fetch total price
   }
   Widget build(BuildContext context) {
     return Scaffold(
@@ -266,11 +294,13 @@ class _orderDetailsState extends State<orderDetails> {
                                               onPressed: () async {
                                                 String foodName = dataList[index]['FoodName'].toString();
                                                 double price = double.tryParse(dataList[index]['Price']) ?? 0.0;
-                                                int quantity = foodQuantity[dataList[index]['FoodName'].toString()] ?? 1;
+                                                int quantity = foodQuantity[dataList[index]['FoodName']] ?? 1;
+                                                int id = dataList[index]['OrderID'];
+
 
                                                 double subtotalValue = calculateSubtotal(quantity, price);
 
-                                                updateRecord(dataList[index]['OrderID'], quantity, subtotalValue);
+                                                updateRecord(id, quantity, subtotalValue);
                                                 // addToCart(dataList[index]['name'], dataList[index]['price']);
                                               },
 
@@ -292,42 +322,70 @@ class _orderDetailsState extends State<orderDetails> {
                                 ),
                         )
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
+                      Container(
+                        alignment: Alignment.center,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              padding: EdgeInsets.fromLTRB(10, 15, 10, 5),
-                              width: MediaQuery.of(context).size.width * 0.75,
-                              height: MediaQuery.of(context).size.height * 0.25,
+                              padding: EdgeInsets.fromLTRB(10, 15, 20, 5),
+                              width: MediaQuery.of(context).size.width * 0.77,
+                              height: MediaQuery.of(context).size.height * 0.30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 color: Color(0xfff9a825),
                               ),
                               child: Column(children: [
                                 Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Sub Total',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                        ),
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Sub Total',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
                                       ),
-                                      Spacer(),
-                                      Text(
-                                        totalPrice.toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                        ),
-                                      ),
-                                    ]),
+                                    ),
+                                    Spacer(),
+                                    FutureBuilder<double>(
+                                      future: fetchTotalPrice(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return CircularProgressIndicator(); // Show a loading indicator while waiting for the result.
+                                        } else if (snapshot.hasError) {
+                                          print('Error: ${snapshot.error}'); // Log the error to the console.
+                                          return Text(
+                                            '',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          );
+                                        } else {
+                                          final totalPrice = snapshot.data ?? 0.0; // Default to 0.0 if data is null.
+                                          return Text(
+                                            'Rs. ' + totalPrice.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                  MediaQuery.of(context).size.height * 0.02,
+                                ),
+
+
                                 Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -351,32 +409,53 @@ class _orderDetailsState extends State<orderDetails> {
                                     ]),
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.04,
+                                      MediaQuery.of(context).size.height * 0.02,
                                 ),
                                 Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Total ',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                        ),
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Total',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0,
                                       ),
-                                      Spacer(),
-                                      Text(
-                                        'Rs. '+(totalPrice+50.00).toString(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                        ),
-                                      ),
-                                    ]),
+                                    ),
+                                    Spacer(),
+                                    FutureBuilder<double>(
+                                      future: fetchTotalPrice(),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                          return CircularProgressIndicator(); // Show a loading indicator while waiting for the result.
+                                        }else if (snapshot.hasError) {
+                                          print('Error: ${snapshot.error}'); // Log the error to the console.
+                                          return Text(
+                                            '',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          );
+                                        } else {
+                                          final totalPrice = snapshot.data ?? 0.0; // Default to 0.0 if data is null.
+                                          return Text(
+                                            'Rs. '+(totalPrice+50.00).toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.02,
+                                      MediaQuery.of(context).size.height * 0.01,
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -395,7 +474,7 @@ class _orderDetailsState extends State<orderDetails> {
                                             EdgeInsets.fromLTRB(14, 0, 20, 0),
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.61,
+                                                0.60,
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.06,
