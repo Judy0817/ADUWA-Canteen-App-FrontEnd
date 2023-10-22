@@ -92,7 +92,7 @@ class _AdminPageState extends State<AdminPage> {
   bool _isloading =true;
 
   // String baseUrl = 'http://10.34.26.42:9090';
-  String baseUrl = 'http://192.168.211.221:9090';
+  String baseUrl = 'http://192.168.250.221:9090';
 
   Future<void> insertRecord() async {
     final apiUrl = Uri.parse("$baseUrl/insert_food");

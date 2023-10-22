@@ -122,11 +122,11 @@ class _OpenCanteenState extends State<OpenCanteen> {
       }
     });
     retrieveData();
-    _refreshRecord();
+    //_refreshRecord();
   }
 
   bool isExpanded = false;
-  String apiUrl = 'http://192.168.211.221:9090/insert_bucket';
+  String apiUrl = 'http://192.168.250.221:9090/insert_bucket';
 
   void handleToggle() {
     setState(() {
@@ -136,7 +136,7 @@ class _OpenCanteenState extends State<OpenCanteen> {
   List<Map<String, dynamic>> dataList = [];
   bool _isloading =true;
   //String baseUrl = 'http://10.34.26.42:9090';
-  String baseUrl = 'http://192.168.211.221:9090';
+  String baseUrl = 'http://192.168.250.221:9090';
 
   Future<void> addToCart(String? username,String foodName, double price) async {
     try {
@@ -178,13 +178,13 @@ class _OpenCanteenState extends State<OpenCanteen> {
       print('Error retrieving data: ${response.body}');
     }
   }
-  Future<void> _refreshRecord() async {
-    final data = await retrieveData();
-    setState(() {
-      // dataList = data;
-      _isloading = false;
-    });
-  }
+  // Future<void> _refreshRecord() async {
+  //   final data = await retrieveData();
+  //   setState(() {
+  //     // dataList = data;
+  //     _isloading = false;
+  //   });
+  // }
 
   static List images = [
     "images/parata.jpg",

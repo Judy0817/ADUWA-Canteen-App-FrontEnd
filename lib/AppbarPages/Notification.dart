@@ -1,24 +1,31 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:university_canteen/AppbarPages/profilePage.dart';
 import '../screens/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
-class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key}) : super(key: key);
+import 'activity.dart';
+
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({Key? key}) : super(key: key);
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _NotificationPageState extends State<NotificationPage> {
   int _currentIndex = 0;
   bool _isHomeActive = false;
-  bool _isProfileActive = false;
+  bool _isProfileActive = true;
   bool _isNotificationActive = false;
-  bool _isMenuActive = true;
+  bool _isMenuActive = false;
+
   @override
+  void initState() {
+    super.initState();
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: GNav(
@@ -33,39 +40,13 @@ class _MenuPageState extends State<MenuPage> {
               _currentIndex = index; // Update the current index when a tab is selected.
 
               // Update the active states for each tab based on the selected index.
-              _isHomeActive = index == 3;
-              _isProfileActive = index == 1;
+              _isHomeActive = index == 1;
+              _isProfileActive = index == 0;
               _isNotificationActive = index == 2;
-              _isMenuActive = index == 0;
+              _isMenuActive = index == 3;
             });
           },
           tabs:[
-            GButton(
-              icon: Icons.phone,
-              text: 'Contact',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MenuPage(), // Replace HomeScreen with your destination screen.
-                  ),
-                );
-              },
-              active: _isMenuActive,
-            ),
-            GButton(
-              icon: Icons.home,
-              text: 'Home',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Home(), // Replace HomeScreen with your destination screen.
-                  ),
-                );
-              },
-              active: _isHomeActive,
-            ),
             GButton(
               icon: Icons.person,
               text: 'Profile',
@@ -80,20 +61,46 @@ class _MenuPageState extends State<MenuPage> {
               active: _isProfileActive,
             ),
             GButton(
+              icon: Icons.home,
+              text: 'Home',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Home(), // Replace HomeScreen with your destination screen.
+                  ),
+                );
+              },
+              active: _isHomeActive,
+            ),
+
+            GButton(
               icon: Icons.notifications,
               text: 'Notification',
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(), // Replace HomeScreen with your destination screen.
+                    builder: (context) => NotificationPage(), // Replace HomeScreen with your destination screen.
                   ),
                 );
               },
               active: _isNotificationActive,
             ),
 
-
+            GButton(
+              icon: Icons.menu_outlined,
+              text: 'Activity',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ActivityPage(), // Replace HomeScreen with your destination screen.
+                  ),
+                );
+              },
+              active: _isMenuActive,
+            ),
           ]),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -129,7 +136,7 @@ class _MenuPageState extends State<MenuPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Contact",
+                            "Your Notification",
                             style: TextStyle(
                               fontSize: 30,
                               height: 1,

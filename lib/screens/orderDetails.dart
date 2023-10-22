@@ -14,7 +14,7 @@ class orderDetails extends StatefulWidget {
 
 class _orderDetailsState extends State<orderDetails> {
 
-  String baseUrl = 'http://192.168.211.221:9090';
+  String baseUrl = 'http://192.168.250.221:9090';
   List<Map<String, dynamic>> dataList = [];
   bool _isloading =true;
 
@@ -54,13 +54,13 @@ class _orderDetailsState extends State<orderDetails> {
       _isloading = true;
     });
   }
-  Future<void> _refreshRecord2() async {
-    final data = await fetchTotalPrice();
-    setState(() {
-      // dataList = data;
-      _isloading = true;
-    });
-  }
+  // Future<void> _refreshRecord2() async {
+  //   final data = await fetchTotalPrice();
+  //   setState(() {
+  //     // dataList = data;
+  //     _isloading = true;
+  //   });
+  // }
   Map<String, int> foodQuantity = {};
   void increaseValue(String foodName) {
     setState(() {

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../screens/home.dart';
-import 'MenuPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+
+import 'Notification.dart';
+import 'activity.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -19,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isProfileActive = true;
   bool _isNotificationActive = false;
   bool _isMenuActive = false;
-  String baseUrl = 'http://192.168.211.221:9090';
+  String baseUrl = 'http://192.168.250.221:9090';
 
   
   Future<String?> getCurrentUserEmail() async {
@@ -127,7 +129,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Home(), // Replace HomeScreen with your destination screen.
+                    builder: (context) => NotificationPage(), // Replace HomeScreen with your destination screen.
                   ),
                 );
               },
@@ -135,13 +137,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
 
             GButton(
-              icon: Icons.phone,
-              text: 'Contact',
+              icon: Icons.menu_outlined,
+              text: 'Activity',
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MenuPage(), // Replace HomeScreen with your destination screen.
+                    builder: (context) => ActivityPage(), // Replace HomeScreen with your destination screen.
                   ),
                 );
               },
