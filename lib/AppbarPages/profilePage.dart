@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -22,6 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   bool _isNotificationActive = false;
   bool _isMenuActive = false;
   String baseUrl = 'http://192.168.250.221:9090';
+  //String baseUrl = 'http://10.34.26.42:9090';
 
   
   Future<String?> getCurrentUserEmail() async {
@@ -36,10 +39,15 @@ class _ProfilePageState extends State<ProfilePage> {
     final String url = '$baseUrl/retrieve_username?email=$userEmail';
     final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      return response.body;
+    final dynamic data = json.decode(response.body);
+
+    if (data is String) {
+      // Remove double quotation marks from the username
+      final userName = data.replaceAll('"', '');
+
+      return userName;
     } else {
-      throw Exception('Failed to load user name');
+      throw Exception('Invalid response format');
     }
   }
   Future<String?> getUserName() async {

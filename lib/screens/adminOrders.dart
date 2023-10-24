@@ -5,19 +5,18 @@ import 'package:university_canteen/screens/orderDetails.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../Reusable/reusable.dart';
-import 'adminOrders.dart';
 import 'home.dart';
 import 'opencanteen.dart';
 
-class AdminPage extends StatefulWidget {
-  const AdminPage({Key? key}) : super(key: key);
+class AdminOrders extends StatefulWidget {
+  const AdminOrders({Key? key}) : super(key: key);
 
   @override
 
-  State<AdminPage> createState() => _AdminPageState();
+  State<AdminOrders> createState() => _AdminOrdersState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class _AdminOrdersState extends State<AdminOrders> {
   Widget SearchBar() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,13 +51,7 @@ class _AdminPageState extends State<AdminPage> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    AdminOrders(), // Replace HomeScreen with your destination screen.
-              ),
-            );
+
           },
           child: Container(
             width: 50.0,
@@ -322,9 +315,9 @@ class _AdminPageState extends State<AdminPage> {
                           SizedBox(
                             width: 240,
                             child: Text(
-                              "Find Your \nFavorite Food",
+                              "Orders",
                               style: TextStyle(
-                                fontSize: 30,
+                                fontSize: 36,
                                 height: 1,
                                 letterSpacing: 2,
                                 fontWeight: FontWeight.bold,
@@ -335,140 +328,7 @@ class _AdminPageState extends State<AdminPage> {
                         ],
                       ),
                       SizedBox(height: 20),
-                      SearchBar(),
-                      SizedBox(height: 20),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 250,
-                            child: Text(
-                              "Popular Foods - Open Canteen",
-                              style: TextStyle(
-                                fontSize: 16,
-                                height: 1,
-                                letterSpacing: 1,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xffffffff),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.55,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: ListView.builder(
-                                itemCount: dataList.length,
-                                itemBuilder: (context, index) {
-                                  final item = dataList[index];
-                                  final id = item['id'];
-                                  final name = item['name'];
-                                  final description = item['description'];
-                                  final price = item['price'];
-                                  return Container(
-                                    margin: EdgeInsets.all(8.0),
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(217, 217, 217, 0.5), // Background color
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => FoodDesc(
-                                              id: id,
-                                              name: name,
-                                              description: description,
-                                              price: price,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                        child: ListTile(
-                                          leading: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              images[index],),
-                                          ),
-                                          title: Text(
-                                            name.toString(),
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color(0xffffffff),
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            price.toString(),
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Color(0xffffffff),
-                                            ),
-                                          ),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(Icons.edit, color: Color(0xfff9a825),),
-                                                  onPressed: () {
-                                                    _showForm(item['id']);
-                                                  },
-                                                ),
-                                                IconButton(
-                                                  icon: const Icon(Icons.delete, color: Color(0xfff9a825),),
-                                                  onPressed: () {
-                                                    deleteRecord(id);
-                                                  },
 
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          // You can customize the appearance of each list item as needed.
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-
-                      ),
-                      SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _showForm(null);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(14, 0, 20, 0),
-                              width: 100.0,
-                              height: 40.0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(50),
-                                color: Color(0xfff9a825),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Add Item',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-
-                        ],
-                      )
                     ],
                   ),
                 ),

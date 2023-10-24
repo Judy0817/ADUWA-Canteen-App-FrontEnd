@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -14,12 +15,75 @@ class orderDetails extends StatefulWidget {
 
 class _orderDetailsState extends State<orderDetails> {
 
+  //String baseUrl = 'http://10.34.26.42:9090';
   String baseUrl = 'http://192.168.250.221:9090';
   List<Map<String, dynamic>> dataList = [];
   bool _isloading =true;
 
-  Future<void> retrieveData() async {
-    final String url = '$baseUrl/retrieve_bucket';
+  Future<String?> getCurrentUserEmail() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      return user.email;
+    } else {
+      return null;// No user is signed in
+    }
+  }
+  Future<String> fetchUserName(String userEmail) async {
+    final String url = '$baseUrl/retrieve_username?email=$userEmail';
+    final response = await http.get(Uri.parse(url));
+
+    final dynamic data = json.decode(response.body);
+
+    if (data is String) {
+      // Remove double quotation marks from the username
+      final userName = data.replaceAll('"', '');
+
+      return userName;
+    } else {
+      throw Exception('Invalid response format');
+    }
+  }
+  Future<String?> getUserName() async {
+    // Get the current user's email
+    String? userEmail = await getCurrentUserEmail();
+
+    if (userEmail != null) {
+      // Call fetchUserName with the user's email
+      String userName = await fetchUserName(userEmail);
+      return userName ;
+
+    } else {
+      return null;
+    }
+  }
+  Future<void> deleteRecord(int id) async {
+    final int recordIdToDelete = id; // Replace with the ID of the record you want to delete
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/delete_bucket/$recordIdToDelete'), // Replace with your server's URL
+    );
+
+    if (response.statusCode == 200) {
+      print('Order deleted successfully');
+      _refreshRecord();
+    } else if (response.statusCode == 404) {
+      print('Order not found');
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
+  Future<void> _refreshRecord() async {
+    String? userName = await getUserName();
+    final data = await retrieveData(userName);
+    setState(() {
+      // dataList = data;
+      _isloading = false;
+    });
+  }
+
+  Future<void> retrieveData(String? username) async {
+
+    final String url = '$baseUrl/retrieve_bucket?Username=$username';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -47,20 +111,6 @@ class _orderDetailsState extends State<orderDetails> {
     }
   }
 
-  Future<void> _refreshRecord1() async {
-    final data = await retrieveData();
-    setState(() {
-      // dataList = data;
-      _isloading = true;
-    });
-  }
-  // Future<void> _refreshRecord2() async {
-  //   final data = await fetchTotalPrice();
-  //   setState(() {
-  //     // dataList = data;
-  //     _isloading = true;
-  //   });
-  // }
   Map<String, int> foodQuantity = {};
   void increaseValue(String foodName) {
     setState(() {
@@ -95,32 +145,6 @@ class _orderDetailsState extends State<orderDetails> {
     return null;
   }
 
-  // Future<void> updateRecord(int id, int Quantity, double SubTotal) async {
-  //
-  //   final int recordIdToDelete = id;
-  //
-  //   if (id == 0 || Quantity==0 || SubTotal==0) {
-  //     // Validation: Check if fields are not empty and ID is valid.
-  //     print('Please enter valid data.');
-  //     return;
-  //   }
-  //   final Uri url = Uri.parse('$baseUrl/update_bucket/$recordIdToDelete');
-  //   final Map<String, String> queryParams = {
-  //     'Quantity': Quantity.toString(),
-  //     'SubTotal': SubTotal.toString(),
-  //   };
-  //   url.replace(queryParameters: queryParams);
-  //
-  //   final response = await http.get(url);
-  //   if (response.statusCode == 200) {
-  //     print('Record updated successfully');
-  //     _refreshRecord1();
-  //   } else if (response.statusCode == 404) {
-  //     print('Not Updated');
-  //   } else {
-  //     print('Error: ${response.statusCode}');
-  //   }
-  // }
   Future<void> updateRecord(int id,int Quantity, double SubTotal) async {
 
     final int recordIdToDelete = id;
@@ -138,7 +162,7 @@ class _orderDetailsState extends State<orderDetails> {
 
     if (response.statusCode == 200) {
       print('Record updated successfully');
-      _refreshRecord1();
+      _refreshRecord();
     } else if (response.statusCode == 404) {
       print('Not Updated');
     } else {
@@ -148,7 +172,8 @@ class _orderDetailsState extends State<orderDetails> {
 
 
   Future<void> fetchData() async {
-    await retrieveData(); // Wait for retrieveData to complete before moving to fetchTotalPrice
+    String? userName = await getUserName();
+    await retrieveData(userName); // Wait for retrieveData to complete before moving to fetchTotalPrice
     await fetchTotalPrice(); // Wait for fetchTotalPrice to complete
   }
 
@@ -226,6 +251,7 @@ class _orderDetailsState extends State<orderDetails> {
                                         width: MediaQuery.of(context).size.width * 0.35,
                                         child: Row(
                                           children: [
+                                            Spacer(),
                                             Container(
                                               width: MediaQuery.of(context).size.height *
                                                   0.04,
@@ -238,6 +264,15 @@ class _orderDetailsState extends State<orderDetails> {
                                               child: InkWell(
                                                 onTap: (){
                                                   decreaseValue(dataList[index]['FoodName']);
+                                                  String foodName = dataList[index]['FoodName'].toString();
+                                                  double price = double.tryParse(dataList[index]['Price']) ?? 0.0;
+                                                  int quantity = foodQuantity[dataList[index]['FoodName']] ?? 1;
+                                                  int id = dataList[index]['OrderID'];
+
+
+                                                  double subtotalValue = calculateSubtotal(quantity, price);
+
+                                                  updateRecord(id, quantity, subtotalValue);
                                                 },
                                                 child: Center(
                                                   child: Icon(
@@ -250,7 +285,7 @@ class _orderDetailsState extends State<orderDetails> {
                                             ),
                                             SizedBox(
                                               width: MediaQuery.of(context).size.width *
-                                                  0.01,
+                                                  0.03,
                                             ),
                                             Text(
                                               '${foodQuantity[dataList[index]['FoodName']] ?? 1}',
@@ -262,7 +297,7 @@ class _orderDetailsState extends State<orderDetails> {
                                             ),
                                             SizedBox(
                                               width: MediaQuery.of(context).size.width *
-                                                  0.00,
+                                                  0.03,
                                             ),
                                             Container(
                                               width: MediaQuery.of(context).size.height *
@@ -276,6 +311,15 @@ class _orderDetailsState extends State<orderDetails> {
                                               child: InkWell(
                                                 onTap: (){
                                                   increaseValue(dataList[index]['FoodName']);
+                                                  String foodName = dataList[index]['FoodName'].toString();
+                                                  double price = double.tryParse(dataList[index]['Price']) ?? 0.0;
+                                                  int quantity = foodQuantity[dataList[index]['FoodName']] ?? 1;
+                                                  int id = dataList[index]['OrderID'];
+
+
+                                                  double subtotalValue = calculateSubtotal(quantity, price);
+
+                                                  updateRecord(id, quantity, subtotalValue);
                                                 },
                                                 child: Center(
                                                   child: Icon(
@@ -290,29 +334,16 @@ class _orderDetailsState extends State<orderDetails> {
                                               width: MediaQuery.of(context).size.width *
                                                   0.01,
                                             ),
-                                            TextButton(
-                                              onPressed: () async {
-                                                String foodName = dataList[index]['FoodName'].toString();
-                                                double price = double.tryParse(dataList[index]['Price']) ?? 0.0;
-                                                int quantity = foodQuantity[dataList[index]['FoodName']] ?? 1;
-                                                int id = dataList[index]['OrderID'];
+                                            Row(
+                                              children: [
+                                                IconButton(
+                                                  icon: const Icon(Icons.delete, color: Color(0xfff9a825),),
+                                                  onPressed: () {
+                                                    deleteRecord(dataList[index]['OrderID']);
+                                                  },
 
-
-                                                double subtotalValue = calculateSubtotal(quantity, price);
-
-                                                updateRecord(id, quantity, subtotalValue);
-                                                // addToCart(dataList[index]['name'], dataList[index]['price']);
-                                              },
-
-                                              style: TextButton.styleFrom(
-                                                primary: Colors.white,
-                                              ),
-                                              child: Text(
-                                                '+',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
-                                              ),
+                                                )
+                                              ],
                                             ),
                                           ],
                                         ),
@@ -321,6 +352,9 @@ class _orderDetailsState extends State<orderDetails> {
                                   ),
                                 ),
                         )
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.03,
                       ),
                       Container(
                         alignment: Alignment.center,
@@ -331,7 +365,7 @@ class _orderDetailsState extends State<orderDetails> {
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               padding: EdgeInsets.fromLTRB(10, 15, 20, 5),
                               width: MediaQuery.of(context).size.width * 0.77,
-                              height: MediaQuery.of(context).size.height * 0.30,
+                              height: MediaQuery.of(context).size.height * 0.25,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
                                 color: Color(0xfff9a825),
@@ -501,7 +535,7 @@ class _orderDetailsState extends State<orderDetails> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

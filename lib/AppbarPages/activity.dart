@@ -25,6 +25,7 @@ class _ActivityPageState extends State<ActivityPage> {
   bool _isMenuActive = false;
   List<Map<String, dynamic>> dataList = [];
   String baseUrl = 'http://192.168.250.221:9090';
+  //String baseUrl = 'http://10.34.26.42:9090';
 
   Future<double> fetchTotalPrice() async {
     final response = await http.get(Uri.parse('$baseUrl/get_total_price2'));

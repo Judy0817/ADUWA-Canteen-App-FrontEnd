@@ -84,10 +84,15 @@ class _OpenCanteenState extends State<OpenCanteen> {
     final String url = '$baseUrl/retrieve_username?email=$userEmail';
     final response = await http.get(Uri.parse(url));
 
-    if (response.statusCode == 200) {
-      return response.body;
+    final dynamic data = json.decode(response.body);
+
+    if (data is String) {
+      // Remove double quotation marks from the username
+      final userName = data.replaceAll('"', '');
+
+      return userName;
     } else {
-      throw Exception('Failed to load user name');
+      throw Exception('Invalid response format');
     }
   }
   Future<String?> getUserName() async {
